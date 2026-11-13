@@ -366,6 +366,78 @@ mark.fix{background:var(--amber-soft);color:#8A5410;border-radius:4px;padding:0 
   .sets-grid{grid-template-columns:1fr}
 }
 
+/* ============ quiz mode ============ */
+.quiz-card{
+  align-self:center;width:100%;max-width:640px;
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:var(--shadow);padding:26px 26px 22px;text-align:center;
+}
+.quiz-prog{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.quiz-prog .prog{flex:1}
+.quiz-prog .qt{font-weight:800;font-size:13.5px;color:var(--ink-soft);white-space:nowrap}
+.quiz-word{display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:30px;margin:4px 0;word-break:break-word}
+.quiz-src{display:inline-block;font-size:12px;font-weight:800;color:var(--violet);background:var(--violet-soft);border-radius:99px;padding:2px 10px;margin:4px 0 2px}
+.quiz-hint{font-size:13.5px;color:var(--ink-soft);margin-top:6px}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.quiz-opt{
+  border:2px solid var(--line);border-radius:var(--r-md);background:var(--bg);
+  padding:12px 16px;font-size:17px;font-weight:700;text-align:left;
+  transition:transform .15s ease,border-color .15s,background .15s;min-height:52px;
+  display:flex;align-items:center;gap:12px;word-break:break-word;
+}
+.quiz-opt:hover:not(:disabled){border-color:var(--lavender);background:#fff;transform:translateY(-1px)}
+.quiz-opt:disabled{cursor:default}
+.quiz-opt .let{width:28px;height:28px;border-radius:50%;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:none}
+.quiz-opt.ok{border-color:var(--green);background:var(--green-soft)}
+.quiz-opt.ok .let{background:var(--green);color:#fff}
+.quiz-opt.bad{border-color:var(--red);background:var(--red-soft);animation:shake .3s}
+.quiz-opt.bad .let{background:var(--red);color:#fff}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.quiz-verdict{min-height:26px;margin-top:14px;font-weight:800;font-size:15.5px}
+.quiz-verdict.g{color:var(--green)}
+.quiz-verdict.r{color:var(--red)}
+.quiz-foot{margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.quiz-done .big-ic{font-size:56px;line-height:1;margin-bottom:8px}
+.quiz-done h2{font-size:25px;margin-bottom:4px}
+.quiz-done .score-big{font-family:var(--font-display);font-size:42px;font-weight:700;color:var(--rose);margin:8px 0 2px}
+.quiz-done p{color:var(--ink-soft);font-size:14.5px}
+.quiz-done .xp-line{font-weight:800;color:var(--amber);font-size:17px;margin:8px 0 4px}
+
+/* ============ game bar ============ */
+.game-bar{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:var(--shadow);padding:14px 20px;margin-bottom:22px;
+}
+.gb-level{display:flex;align-items:center;gap:12px;min-width:0}
+.gb-ic{width:52px;height:52px;border-radius:50%;background:var(--violet-soft);display:flex;align-items:center;justify-content:center;font-size:27px;flex:none}
+.gb-lname{font-family:var(--font-display);font-weight:700;font-size:16.5px;line-height:1.2}
+.gb-lxp{font-size:12.5px;color:var(--ink-soft);font-weight:700}
+.gb-bars{flex:1;min-width:170px;display:flex;flex-direction:column;gap:8px}
+.gb-row{display:flex;align-items:center;gap:10px}
+.gb-row .prog{flex:1;height:8px}
+.gb-row .lab{font-size:12px;font-weight:800;color:var(--ink-soft);white-space:nowrap;min-width:86px;text-align:right}
+.gb-flame{display:flex;align-items:center;gap:6px;font-weight:800;font-size:15px;color:var(--peach-deep);white-space:nowrap}
+.gb-flame span{font-size:22px}
+.hd-btn.muted{opacity:.5}
+
+/* badges */
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;margin-top:6px}
+.badge{border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px 12px;text-align:center;background:var(--bg)}
+.badge.locked{opacity:.45;filter:grayscale(.85)}
+.badge .bi{font-size:32px;margin-bottom:6px}
+.badge .bn{font-weight:800;font-size:14px;line-height:1.25}
+.badge .bd{font-size:12px;color:var(--ink-soft);margin-top:3px}
+
+/* xp float */
+.xp-float{position:fixed;z-index:98;pointer-events:none;font-weight:800;color:var(--amber);font-size:16px;animation:xpUp 1.2s ease forwards}
+@keyframes xpUp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-46px)}}
+
+/* confetti */
+#confetti-box{position:fixed;inset:0;pointer-events:none;z-index:97;overflow:hidden}
+.cf{position:absolute;top:-14px;width:10px;height:14px;border-radius:3px;animation:cfFall linear forwards}
+@keyframes cfFall{to{transform:translateY(108vh) rotate(720deg);opacity:.9}}
+
 /* worksheet modal */
 .ws-opts{display:flex;flex-direction:column;gap:12px;margin:6px 0 4px}
 .ws-opts .dir-sw{align-self:flex-start}
@@ -405,6 +477,9 @@ mark.fix{background:var(--amber-soft);color:#8A5410;border-radius:4px;padding:0 
       </div>
     </div>
     <div class="hd-spacer"></div>
+    <button type="button" class="hd-btn" id="btn-sound" title="Звук" style="padding:8px 11px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+    </button>
     <div class="lang-sw" role="group" aria-label="Language">
       <button type="button" id="lang-ua">UA</button>
       <button type="button" id="lang-ru">RU</button>
@@ -427,6 +502,7 @@ mark.fix{background:var(--amber-soft);color:#8A5410;border-radius:4px;padding:0 
       <h1 data-i18n="lib_title">Мои коллекции</h1>
       <span class="sub" data-i18n="lib_sub">Наборы слов и фраз для изучения. Откройте набор, чтобы редактировать, или начните тренировку.</span>
     </div>
+    <div id="game-slot"></div>
     <div id="review-slot"></div>
     <div class="sets-grid" id="sets-grid"></div>
   </section>
@@ -483,6 +559,10 @@ mark.fix{background:var(--amber-soft);color:#8A5410;border-radius:4px;padding:0 
       <h1 id="tr-title">Тренировка</h1>
     </div>
     <div class="tr-bar">
+      <div class="dir-sw" role="group" aria-label="Режим">
+        <button type="button" id="mode-type" class="on" data-i18n="mode_type">Вписувати</button>
+        <button type="button" id="mode-quiz" data-i18n="mode_quiz">Тест</button>
+      </div>
       <div class="dir-sw" role="group" aria-label="Направление">
         <button type="button" id="dir-en2tr">EN → <span data-i18n="tr_short">Перевод</span></button>
         <button type="button" id="dir-tr2en"><span data-i18n="tr_short2">Перевод</span> → EN</button>
@@ -632,7 +712,19 @@ mark.fix{background:var(--amber-soft);color:#8A5410;border-radius:4px;padding:0 
   </div>
 </div>
 
+<div class="mback" id="m-badges">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2 data-i18n="bd_title">Мої досягнення</h2>
+    <p data-i18n="bd_sub">Бейджі за тренування, вивчені слова та щоденні серії. Нові — попереду!</p>
+    <div class="badge-grid" id="badge-grid"></div>
+    <div class="m-actions">
+      <button type="button" class="btn btn-ghost" data-close data-i18n="close">Закрити</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+<div id="confetti-box"></div>
 <div id="print-area"></div>
 <div class="foot-note" data-i18n="foot">WordBloom работает офлайн: все слова хранятся только в этом браузере. Делайте резервную копию время от времени.</div>
 
@@ -666,12 +758,13 @@ ua:{
   m_res_title:"Відновити копію", m_res_sub:"Оберіть файл резервної копії (.json). Увага: поточні дані в цьому браузері будуть замінені.",
   foot:"WordBloom працює офлайн: усі слова зберігаються лише в цьому браузері. Робіть резервну копію час від часу.",
   tr_short:"Переклад", tr_short2:"Переклад", shuffle:"Перемішати", only_marked:"Тільки складні",
-  restart:"Заново", check:"Перевірити", retry_wrong:"Повторити помилки",
+  restart:"Заново", check:"Перевірити все", retry_wrong:"Повторити помилки",
+  check_word:"Перевірити слово", q_try_again:"Спробуйте ще раз", v_fixed:"Виправлено",
   rv_title:"На доопрацювання", rv_sub:"Сюди потрапляють слова з помилками та підказками. Слово «розцвітає» і йде звідси після двох правильних відповідей поспіль без підказок.",
   new_set:"Нова колекція", import_set:"Імпорт", open:"Відкрити",
   empty_h:"Поки що пусто", empty_p:"Створіть першу колекцію — додайте слова вручну або вставте готовий список.",
   words:["слово","слова","слів"], learned:"вивчено", of:"з",
-  review_cta:"Повторити", review_line:"чекають на повторення",
+  review_cta:"Повторити", review_line:"чекають на повторення", review_line1:"чекає на повторення",
   del_set_h:"Видалити набір?", del_set_p:"і всі слова в ньому будуть видалені безповоротно.",
   del_word_h:"Видалити слово?", del_word_p:"Пару буде прибрано з набору.",
   col_en:"English", col_tr:"Переклад", my_ex:"Моє речення", teacher_ex:"Приклад від викладача",
@@ -686,6 +779,19 @@ ua:{
   t_split:"Набір поділено на частини", t_nothing:"Немає що повторювати — помилок немає",
   t_empty_name:"Введіть назву набору", t_no_words:"Додайте хоча б одну пару слів",
   t_hint_used:"Підказка", t_backup_bad:"Файл копії не розпізнано",
+  mode_type:"Вписувати", mode_quiz:"Тест",
+  q_hint_tr:"Оберіть правильний переклад", q_hint_en:"Оберіть англійське слово",
+  q_next:"Далі", q_finish:"Підсумок", q_again:"Ще раз",
+  q_correct:"Правильно!", q_wrong:"Правильна відповідь:",
+  q_done_h:"Тест завершено!", q_perfect:"Ідеально — жодної помилки!",
+  q_good:"Чудовий результат! Ще трохи практики — і все розцвіте.",
+  q_keep:"Гарне тренування! Складні слова вже чекають у повторенні.",
+  lvl:"рівень", today:"Сьогодні", streak_days:["день","дні","днів"],
+  goal_done:"Денну мету виконано! Так тримати!",
+  bd_title:"Мої досягнення", bd_sub:"Бейджі за тренування, вивчені слова та щоденні серії. Нові — попереду!",
+  bd_btn:"Досягнення", t_badge:"Нове досягнення:", t_levelup:"Новий рівень:",
+  quiz_short:"Для тесту потрібно хоча б 2 слова",
+  sound_aria:"Увімкнути або вимкнути звук",
   demo_name:"Демо · IELTS Education", created:"створено"
 },
 ru:{
@@ -712,12 +818,13 @@ ru:{
   m_res_title:"Восстановить копию", m_res_sub:"Выберите файл резервной копии (.json). Внимание: текущие данные в этом браузере будут заменены.",
   foot:"WordBloom работает офлайн: все слова хранятся только в этом браузере. Делайте резервную копию время от времени.",
   tr_short:"Перевод", tr_short2:"Перевод", shuffle:"Перемешать", only_marked:"Только сложные",
-  restart:"Заново", check:"Проверить", retry_wrong:"Повторить ошибки",
+  restart:"Заново", check:"Проверить все", retry_wrong:"Повторить ошибки",
+  check_word:"Проверить слово", q_try_again:"Попробуйте ещё раз", v_fixed:"Исправлено",
   rv_title:"На доработку", rv_sub:"Сюда попадают слова с ошибками и подсказками. Слово «расцветает» и уходит отсюда после двух верных ответов подряд без подсказок.",
   new_set:"Новая коллекция", import_set:"Импорт", open:"Открыть",
   empty_h:"Пока пусто", empty_p:"Создайте первую коллекцию — добавьте слова вручную или вставьте готовый список.",
   words:["слово","слова","слов"], learned:"выучено", of:"из",
-  review_cta:"Повторить", review_line:"ждут повторения",
+  review_cta:"Повторить", review_line:"ждут повторения", review_line1:"ждёт повторения",
   del_set_h:"Удалить набор?", del_set_p:"и все слова в нём будут удалены безвозвратно.",
   del_word_h:"Удалить слово?", del_word_p:"Пара будет убрана из набора.",
   col_en:"English", col_tr:"Перевод", my_ex:"Моё предложение", teacher_ex:"Пример от преподавателя",
@@ -732,6 +839,19 @@ ru:{
   t_split:"Набор разделён на части", t_nothing:"Повторять нечего — ошибок нет",
   t_empty_name:"Введите название набора", t_no_words:"Добавьте хотя бы одну пару слов",
   t_hint_used:"Подсказка", t_backup_bad:"Файл копии не распознан",
+  mode_type:"Вписывать", mode_quiz:"Тест",
+  q_hint_tr:"Выберите правильный перевод", q_hint_en:"Выберите английское слово",
+  q_next:"Дальше", q_finish:"Итог", q_again:"Ещё раз",
+  q_correct:"Верно!", q_wrong:"Правильный ответ:",
+  q_done_h:"Тест завершён!", q_perfect:"Идеально — ни одной ошибки!",
+  q_good:"Отличный результат! Ещё немного практики — и всё расцветёт.",
+  q_keep:"Хорошая тренировка! Сложные слова уже ждут в повторении.",
+  lvl:"уровень", today:"Сегодня", streak_days:["день","дня","дней"],
+  goal_done:"Дневная цель выполнена! Так держать!",
+  bd_title:"Мои достижения", bd_sub:"Бейджи за тренировки, выученные слова и ежедневные серии. Новые — впереди!",
+  bd_btn:"Достижения", t_badge:"Новое достижение:", t_levelup:"Новый уровень:",
+  quiz_short:"Для теста нужно хотя бы 2 слова",
+  sound_aria:"Включить или выключить звук",
   demo_name:"Демо · IELTS Education", created:"создано"
 }};
 
@@ -795,6 +915,8 @@ function askConfirm(title, txt, cb){
 /* ---------- icons ---------- */
 const IC = {
   speaker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  speakerOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>',
   trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
   share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
   bulb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.4 1 2.3h6c0-.9.4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>',
@@ -851,6 +973,7 @@ function showView(name){
 function renderLibrary(){
   const grid = document.getElementById("sets-grid");
   grid.innerHTML = "";
+  renderGameBar();
 
   /* review banner */
   const need = allNeedItems();
@@ -860,7 +983,7 @@ function renderLibrary(){
       '<div class="review-banner">' +
         '<div class="ic">' + IC.flower + '</div>' +
         '<div class="grow"><b>' + esc(t("rv_title")) + ': ' + need.length + '</b>' +
-        '<p>' + need.length + ' ' + plur(need.length, t("words")) + ' ' + esc(t("review_line")) + '</p></div>' +
+        '<p>' + need.length + ' ' + plur(need.length, t("words")) + ' ' + esc(need.length === 1 ? t("review_line1") : t("review_line")) + '</p></div>' +
         '<button type="button" class="btn btn-ghost btn-sm" id="btn-go-review">' + esc(t("open")) + '</button>' +
         '<button type="button" class="btn btn-primary btn-sm" id="btn-train-review">' + esc(t("review_cta")) + '</button>' +
       '</div>';
@@ -925,6 +1048,7 @@ function renderLibrary(){
 function createSet(name){
   const s = { id: uid(), name: name.trim(), ci: DB.sets.length % 6, created: Date.now(), words: [] };
   DB.sets.push(s);
+  checkBadge("first_set", true);
   save();
   return s;
 }
@@ -1011,7 +1135,7 @@ function importPayload(payload){
 }
 
 function doBackup(){
-  const payload = { type:"wordbloom-backup", v:1, data:{ sets: DB.sets, seq: DB.seq } };
+  const payload = { type:"wordbloom-backup", v:1, data:{ sets: DB.sets, seq: DB.seq, game: DB.game } };
   downloadFile("wordbloom-backup-" + new Date().toISOString().slice(0,10) + ".json", JSON.stringify(payload));
   toast(t("t_backup"));
 }
@@ -1023,6 +1147,8 @@ function doRestore(file){
       if(obj && obj.type==="wordbloom-backup" && obj.data && Array.isArray(obj.data.sets)){
         DB.sets = obj.data.sets;
         DB.seq = obj.data.seq || 1000;
+        if(obj.data.game) DB.game = obj.data.game;
+        ensureGame(); syncSoundBtn();
         save(); closeAllModals(); showView("library");
         toast(t("t_restored"));
       } else toast(t("t_backup_bad"), true);
@@ -1173,6 +1299,7 @@ function markDiff(correct, given){
 function openTrainer(sid){
   TR = {
     sid: sid,
+    mode: "type",
     dir: "en2tr",
     shuffled: true,
     markedOnly: false,
@@ -1187,6 +1314,7 @@ function openTrainer(sid){
   const tgM = document.getElementById("tg-marked");
   tgM.classList.remove("on"); tgM.setAttribute("aria-pressed","false");
   tgM.style.display = sid ? "" : "none";
+  syncModeSw();
   rebuildItems();
   if(!TR.items.length){ toast(t("t_nothing")); TR = null; return; }
   document.getElementById("tr-title").textContent = sid ? getSet(sid).name : t("rv_title");
@@ -1229,79 +1357,149 @@ function renderTrainer(){
       '<div class="num">' + (i+1) + '</div>' +
       promptHtml +
       '<div class="ans-wrap" style="display:flex;gap:8px;align-items:center">' +
-        '<input type="text" class="tr-ans" autocomplete="off" autocapitalize="off" spellcheck="off" aria-label="' + esc(t("check")) + ' ' + (i+1) + '">' +
+        '<input type="text" class="tr-ans" autocomplete="off" autocapitalize="off" spellcheck="off" aria-label="' + esc(t("check_word")) + ' ' + (i+1) + '">' +
         '<button type="button" class="btn-icon" data-act="hint" style="width:36px;height:36px" title="' + esc(t("hint_aria")) + '" aria-label="' + esc(t("hint_aria")) + '">' + IC.bulb + '</button>' +
+        '<button type="button" class="btn-icon go" data-act="go" style="width:36px;height:36px" title="' + esc(t("check_word")) + '" aria-label="' + esc(t("check_word")) + '">' + IC.check + '</button>' +
       '</div>' +
       '<div class="tr-status"></div>' +
       '<div class="tr-verdict"></div>';
     list.appendChild(row);
   });
+  document.querySelector("#view-trainer .tr-foot").style.display = "";
   document.getElementById("btn-check").style.display = "";
   document.getElementById("btn-retry").style.display = "none";
   document.getElementById("tr-score").classList.remove("on");
-  const first = list.querySelector(".tr-ans");
+  /* restore already-graded rows (e.g. after direction switch mid-round) */
+  TR.items.forEach(it=>{
+    const r = TR.res[it.wid];
+    if(r && r.locked){
+      const row = list.querySelector('.tr-row[data-wid="' + it.wid + '"]');
+      const w = getWord(it.sid, it.wid);
+      if(row && w){
+        row.querySelector(".tr-ans").value = r.given || "";
+        lockRow(row, r);
+        renderVerdict(row, w, r);
+      }
+    }
+  });
+  const first = list.querySelector(".tr-ans:not(:disabled)");
   if(first && window.innerWidth > 760) first.focus();
 }
 function rowAnswer(row){
   const w = getWord(row.dataset.sid, row.dataset.wid);
   return TR.dir === "en2tr" ? w.tr : w.en;
 }
-function doCheck(){
+function lockRow(row, r){
+  row.classList.remove("hint","bad","ok","skip");
+  row.classList.add(r.status);
+  row.querySelector(".tr-ans").disabled = true;
+  row.querySelectorAll('[data-act="hint"],[data-act="go"]').forEach(b=> b.disabled = true);
+}
+function renderVerdict(row, w, r){
+  const correct = TR.dir === "en2tr" ? w.tr : w.en;
+  row.querySelector(".tr-status").textContent =
+    r.status === "ok" ? "✓" : r.status === "bad" ? "✗" : r.status === "hint" ? "💡" : "–";
+  let html = "";
+  if(r.status === "ok"){
+    html = '<span class="lab">' + esc(t("v_ok")) + '</span>';
+  } else if(r.status === "hint"){
+    const lab = (r.hinted && r.tries <= 1) ? t("v_hint") : t("v_fixed");
+    html = '<span class="lab">' + esc(lab) + '</span><span>' + esc(correct) + '</span>';
+  } else if(r.status === "bad"){
+    html = '<span class="lab">' + esc(t("v_bad")) + '</span><span>' + markDiff(correct, r.given) + '</span>' +
+           '<span style="color:var(--ink-soft)">· ' + esc(t("you_wrote")) + ' <b>' + esc(r.given) + '</b></span>';
+  } else {
+    html = '<span class="lab">' + esc(t("v_skip")) + '</span><span>' + esc(correct) + '</span>';
+  }
+  if(TR.dir === "tr2en" && r.status !== "ok"){
+    html += ' <button type="button" class="btn-icon" data-act="say-v" style="width:32px;height:32px" title="' + esc(t("speak_aria")) + '">' + IC.speaker + '</button>';
+  }
+  row.querySelector(".tr-verdict").innerHTML = html;
+}
+/* grade one row; reveal=false → interactive single check (2 tries), reveal=true → batch */
+function gradeRow(row, reveal){
+  const w = getWord(row.dataset.sid, row.dataset.wid);
+  if(!w) return {status:"skip", xp:0};
+  const r = TR.res[row.dataset.wid] || {hinted:false, tries:0, locked:false, given:""};
+  if(typeof r.tries !== "number") r.tries = 0;
+  if(typeof r.locked !== "boolean") r.locked = false;
+  TR.res[row.dataset.wid] = r;
+  if(r.locked) return {status:r.status, xp:0};
+  const inp = row.querySelector(".tr-ans");
+  const given = inp.value;
+  const correct = rowAnswer(row);
+  const vd = row.querySelector(".tr-verdict");
+
+  if(!norm(given)){
+    if(!reveal) return {status:"empty", xp:0};
+    r.status = "skip"; r.locked = true; r.given = "";
+    lockRow(row, r); renderVerdict(row, w, r);
+    markActivity(1);
+    return {status:"skip", xp:0};
+  }
+  r.tries++;
+  r.given = given;
+  if(norm(given) === norm(correct)){
+    const clean = r.tries === 1 && !r.hinted;
+    r.status = clean ? "ok" : "hint";
+    r.locked = true;
+    if(clean){
+      w.streak = (w.streak || 0) + 1;
+      if(w.streak >= 2) w.need = false;
+    } else {
+      w.need = true; w.streak = 0;
+    }
+    lockRow(row, r); renderVerdict(row, w, r);
+    markActivity(1);
+    return {status:r.status, xp: clean ? 10 : 4};
+  }
+  /* wrong */
+  w.need = true; w.streak = 0;
+  if(!reveal && r.tries < 2){
+    row.classList.remove("hint");
+    row.classList.add("bad");
+    row.querySelector(".tr-status").textContent = "✗";
+    vd.innerHTML = '<span class="lab">' + esc(t("q_try_again")) + '</span>';
+    sfx("no");
+    inp.focus(); inp.select();
+    return {status:"open", xp:0};
+  }
+  r.status = "bad"; r.locked = true;
+  lockRow(row, r); renderVerdict(row, w, r);
+  if(!reveal) sfx("no");
+  markActivity(1);
+  return {status:"bad", xp:0};
+}
+function checkRow(row){
+  if(!TR || TR.mode !== "type" || TR.checked || !row) return;
+  const res = gradeRow(row, false);
+  if(res.status === "empty") return;
+  if(res.xp > 0) addXP(res.xp, row);
+  save();
+  maybeFinishRound();
+}
+function doCheckAll(){
+  if(!TR || TR.mode !== "type" || TR.checked) return;
+  let xpSum = 0;
+  document.querySelectorAll("#tr-list .tr-row").forEach(row=>{ xpSum += gradeRow(row, true).xp; });
+  finishRound(xpSum);
+}
+function maybeFinishRound(){
+  const rows = Array.from(document.querySelectorAll("#tr-list .tr-row"));
+  if(rows.length && rows.every(row=>{ const r = TR.res[row.dataset.wid]; return r && r.locked; })) finishRound(0);
+}
+function finishRound(xpSum){
   if(!TR || TR.checked) return;
   TR.checked = true;
   let okN = 0, badN = 0, hintN = 0, skipN = 0;
   document.querySelectorAll("#tr-list .tr-row").forEach(row=>{
-    const w = getWord(row.dataset.sid, row.dataset.wid);
-    if(!w) return;
-    const inp = row.querySelector(".tr-ans");
-    const given = inp.value;
-    const correct = rowAnswer(row);
-    const r = TR.res[row.dataset.wid] || {hinted:false};
-    let status;
-    if(!norm(given)) status = "skip";
-    else if(norm(given) === norm(correct)) status = r.hinted ? "hint" : "ok";
-    else status = "bad";
-    r.status = status; r.given = given;
-    TR.res[row.dataset.wid] = r;
-
-    /* stats */
-    if(status === "ok"){
-      w.streak = (w.streak||0) + 1;
-      if(w.streak >= 2) w.need = false;
-      okN++;
-    } else if(status === "hint" || status === "bad"){
-      w.need = true; w.streak = 0;
-      if(status === "hint") hintN++; else badN++;
-    } else skipN++;
-
-    /* render verdict */
-    row.classList.remove("hint");
-    row.classList.add(status);
-    inp.disabled = true;
-    const hb = row.querySelector('[data-act="hint"]');
-    if(hb) hb.disabled = true;
-    const st = row.querySelector(".tr-status");
-    st.textContent = status==="ok" ? "✓" : status==="bad" ? "✗" : status==="hint" ? "💡" : "–";
-    const vd = row.querySelector(".tr-verdict");
-    let html = "";
-    if(status === "ok"){
-      html = '<span class="lab">' + esc(t("v_ok")) + '</span>';
-    } else if(status === "hint"){
-      html = '<span class="lab">' + esc(t("v_hint")) + '</span><span>' + esc(correct) + '</span>';
-    } else if(status === "bad"){
-      html = '<span class="lab">' + esc(t("v_bad")) + '</span><span>' + markDiff(correct, given) + '</span>' +
-             '<span style="color:var(--ink-soft)">· ' + esc(t("you_wrote")) + ' <b>' + esc(given) + '</b></span>';
-    } else {
-      html = '<span class="lab">' + esc(t("v_skip")) + '</span><span>' + esc(correct) + '</span>';
-    }
-    if(TR.dir === "tr2en" && status !== "ok"){
-      html += ' <button type="button" class="btn-icon" data-act="say-v" style="width:32px;height:32px" title="' + esc(t("speak_aria")) + '">' + IC.speaker + '</button>';
-    }
-    vd.innerHTML = html;
+    const r = TR.res[row.dataset.wid];
+    if(!r) return;
+    if(r.status === "ok") okN++;
+    else if(r.status === "bad") badN++;
+    else if(r.status === "hint") hintN++;
+    else skipN++;
   });
-  save();
-
-  /* score */
   const total = TR.items.length;
   const sc = document.getElementById("tr-score");
   sc.innerHTML =
@@ -1313,6 +1511,14 @@ function doCheck(){
   sc.classList.add("on");
   document.getElementById("btn-check").style.display = "none";
   if(badN + hintN + skipN > 0) document.getElementById("btn-retry").style.display = "";
+
+  /* gamification */
+  checkBadge("first_round", true);
+  if(okN === total && total >= 5){ xpSum += 20; checkBadge("perfect", true); }
+  if(xpSum > 0) addXP(xpSum, sc);
+  checkLearnedBadges();
+  if(okN === total && total >= 3) confettiBurst(42);
+  save();
 }
 function doRetry(){
   const wrong = TR.items.filter(it=>{
@@ -1337,11 +1543,14 @@ document.getElementById("tr-list").addEventListener("click", e=>{
   } else if(act === "say-v"){
     const w = getWord(row.dataset.sid, row.dataset.wid);
     speak(w.en);
+  } else if(act === "go" && !TR.checked){
+    checkRow(row);
   } else if(act === "hint" && !TR.checked){
     const correct = rowAnswer(row);
     const inp = row.querySelector(".tr-ans");
+    if(inp.disabled) return;
     inp.value = correct.trim().charAt(0);
-    const r = TR.res[row.dataset.wid] || {};
+    const r = TR.res[row.dataset.wid] || {tries:0, locked:false, given:""};
     r.hinted = true;
     TR.res[row.dataset.wid] = r;
     row.classList.add("hint");
@@ -1351,10 +1560,363 @@ document.getElementById("tr-list").addEventListener("click", e=>{
 document.getElementById("tr-list").addEventListener("keydown", e=>{
   if(e.key !== "Enter" || !e.target.classList.contains("tr-ans")) return;
   e.preventDefault();
-  const inputs = Array.from(document.querySelectorAll("#tr-list .tr-ans:not(:disabled)"));
-  const idx = inputs.indexOf(e.target);
-  if(idx >= 0 && idx < inputs.length - 1) inputs[idx+1].focus();
-  else doCheck();
+  if(!TR || TR.mode !== "type") return;
+  const row = e.target.closest(".tr-row");
+  if(row && norm(e.target.value)) checkRow(row);
+  const unlocked = Array.from(document.querySelectorAll("#tr-list .tr-ans:not(:disabled)"));
+  if(unlocked.length) unlocked[0].focus();
+  else doCheckAll();
+});
+</script>
+<script>
+"use strict";
+/* ================= gamification ================= */
+const LEVELS = [
+  {xp:0,    ic:"🌱", ua:"Зернятко",  ru:"Семечко"},
+  {xp:100,  ic:"🌿", ua:"Паросток",  ru:"Росток"},
+  {xp:250,  ic:"🪴", ua:"Кущик",     ru:"Кустик"},
+  {xp:500,  ic:"🌷", ua:"Бутон",     ru:"Бутон"},
+  {xp:900,  ic:"🌸", ua:"Квітка",    ru:"Цветок"},
+  {xp:1400, ic:"🌺", ua:"Цвітіння",  ru:"Цветение"},
+  {xp:2000, ic:"🌻", ua:"Сад",       ru:"Сад"},
+  {xp:3000, ic:"🏵️", ua:"Оранжерея", ru:"Оранжерея"}
+];
+const BADGES = [
+  {id:"first_set",   ic:"🌱", ua:{n:"Перший набір",      d:"Створено першу колекцію слів"},        ru:{n:"Первый набор",      d:"Создана первая коллекция слов"}},
+  {id:"first_round", ic:"🎯", ua:{n:"Перше тренування",  d:"Завершено перший раунд перевірки"},    ru:{n:"Первая тренировка",  d:"Завершён первый раунд проверки"}},
+  {id:"quiz_first",  ic:"🔘", ua:{n:"Перший тест",       d:"Пройдено тест із варіантами відповідей"}, ru:{n:"Первый тест",      d:"Пройден тест с вариантами ответов"}},
+  {id:"perfect",     ic:"⭐", ua:{n:"Бездоганно",        d:"Раунд із 5+ слів без жодної помилки"}, ru:{n:"Безупречно",         d:"Раунд из 5+ слов без единой ошибки"}},
+  {id:"learned_10",  ic:"🌷", ua:{n:"10 квіток",         d:"Розцвіло 10 слів"},                    ru:{n:"10 цветов",          d:"Расцвело 10 слов"}},
+  {id:"learned_50",  ic:"🌸", ua:{n:"50 квіток",         d:"Розцвіло 50 слів"},                    ru:{n:"50 цветов",          d:"Расцвело 50 слов"}},
+  {id:"learned_100", ic:"💐", ua:{n:"100 квіток",        d:"Розцвіло 100 слів"},                   ru:{n:"100 цветов",         d:"Расцвело 100 слов"}},
+  {id:"streak_3",    ic:"🔥", ua:{n:"3 дні поспіль",     d:"Тренування три дні підряд"},           ru:{n:"3 дня подряд",       d:"Тренировки три дня подряд"}},
+  {id:"streak_7",    ic:"🏅", ua:{n:"Тиждень вогню",     d:"Тренування сім днів підряд"},          ru:{n:"Неделя огня",        d:"Тренировки семь дней подряд"}},
+  {id:"xp_500",      ic:"🌟", ua:{n:"500 балів",         d:"Набрано 500 XP"},                      ru:{n:"500 баллов",         d:"Набрано 500 XP"}}
+];
+
+function ensureGame(){
+  if(!DB.game || typeof DB.game !== "object") DB.game = {};
+  const g = DB.game;
+  if(typeof g.xp !== "number") g.xp = 0;
+  if(typeof g.dayGoal !== "number" || g.dayGoal < 1) g.dayGoal = 20;
+  if(typeof g.dayDate !== "string") g.dayDate = "";
+  if(typeof g.dayCount !== "number") g.dayCount = 0;
+  if(typeof g.streakDays !== "number") g.streakDays = 0;
+  if(typeof g.lastPlayDay !== "string") g.lastPlayDay = "";
+  if(!Array.isArray(g.badges)) g.badges = [];
+  if(typeof g.sound !== "boolean") g.sound = true;
+}
+function dayKey(d){
+  const x = d || new Date();
+  return x.getFullYear() + "-" + String(x.getMonth()+1).padStart(2,"0") + "-" + String(x.getDate()).padStart(2,"0");
+}
+function ensureToday(){
+  ensureGame();
+  const g = DB.game, today = dayKey();
+  if(g.dayDate !== today){ g.dayDate = today; g.dayCount = 0; }
+}
+function levelOf(xp){ let li = 0; LEVELS.forEach((L,i)=>{ if(xp >= L.xp) li = i; }); return li; }
+function learnedTotal(){ let n = 0; DB.sets.forEach(s=>{ n += learnedCount(s); }); return n; }
+
+/* ---------- sounds (WebAudio, без файлів) ---------- */
+let AC = null, audioUnlocked = false;
+document.addEventListener("pointerdown", ()=>{ audioUnlocked = true; }, {once:true});
+function tone(freq, t0, dur, type, vol){
+  if(!audioUnlocked) return;
+  try{
+    if(!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+    const o = AC.createOscillator(), gn = AC.createGain();
+    o.type = type || "sine"; o.frequency.value = freq;
+    gn.gain.setValueAtTime(0.0001, AC.currentTime + t0);
+    gn.gain.exponentialRampToValueAtTime(vol || 0.12, AC.currentTime + t0 + 0.02);
+    gn.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + t0 + dur);
+    o.connect(gn); gn.connect(AC.destination);
+    o.start(AC.currentTime + t0); o.stop(AC.currentTime + t0 + dur + 0.05);
+  }catch(e){}
+}
+function sfx(kind){
+  if(!DB.game || !DB.game.sound) return;
+  if(kind === "ok"){ tone(660, 0, .12); tone(880, .09, .18); }
+  else if(kind === "no"){ tone(220, 0, .18, "triangle", .08); }
+  else if(kind === "badge"){ tone(523, 0, .12); tone(659, .1, .12); tone(784, .2, .22); }
+  else if(kind === "level"){ tone(523, 0, .12); tone(659, .11, .12); tone(784, .22, .12); tone(1047, .33, .3); }
+}
+function syncSoundBtn(){
+  const b = document.getElementById("btn-sound");
+  if(!b) return;
+  b.classList.toggle("muted", !DB.game.sound);
+  b.innerHTML = DB.game.sound ? IC.speaker : IC.speakerOff;
+  b.title = t("sound_aria");
+  b.setAttribute("aria-label", t("sound_aria"));
+}
+
+/* ---------- confetti ---------- */
+function confettiBurst(n){
+  if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = document.getElementById("confetti-box");
+  const colors = ["#FFADC9","#FF9E5E","#8FDAEC","#AC93D6","#A5DB8B","#CE5A89","#FFD3E0"];
+  for(let i = 0; i < (n || 40); i++){
+    const c = document.createElement("i");
+    c.className = "cf";
+    c.style.left = (Math.random()*100) + "vw";
+    c.style.background = colors[i % colors.length];
+    c.style.animationDuration = (1.6 + Math.random()*1.4) + "s";
+    c.style.animationDelay = (Math.random()*0.25) + "s";
+    if(Math.random() < .4) c.style.borderRadius = "50%";
+    box.appendChild(c);
+    setTimeout(()=>c.remove(), 3600);
+  }
+}
+
+/* ---------- XP / badges / day streak ---------- */
+function floatXP(el, n){
+  if(!el) return;
+  const r = el.getBoundingClientRect();
+  const f = document.createElement("div");
+  f.className = "xp-float";
+  f.textContent = "+" + n + " XP";
+  f.style.left = Math.max(8, r.left + r.width/2 - 26) + "px";
+  f.style.top = (r.top - 6) + "px";
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(), 1300);
+}
+function addXP(n, anchorEl){
+  ensureGame();
+  const g = DB.game;
+  const before = levelOf(g.xp);
+  g.xp += n;
+  checkBadge("xp_500", g.xp >= 500);
+  const after = levelOf(g.xp);
+  floatXP(anchorEl, n);
+  if(after > before){
+    const lname = LEVELS[after][DB.lang] || LEVELS[after].ru;
+    toast("🌸 " + t("t_levelup") + " " + lname);
+    confettiBurst(36);
+    sfx("level");
+  } else sfx("ok");
+}
+function checkBadge(id, cond){
+  ensureGame();
+  const g = DB.game;
+  if(!cond || g.badges.includes(id)) return;
+  g.badges.push(id);
+  const b = BADGES.find(x=>x.id === id);
+  if(b){
+    const L = b[DB.lang] || b.ru;
+    toast("🏅 " + t("t_badge") + " " + L.n);
+  }
+  sfx("badge");
+}
+function checkLearnedBadges(){
+  const n = learnedTotal();
+  checkBadge("learned_10", n >= 10);
+  checkBadge("learned_50", n >= 50);
+  checkBadge("learned_100", n >= 100);
+}
+function markActivity(wordsCount){
+  ensureToday();
+  const g = DB.game, today = dayKey();
+  if(g.lastPlayDay !== today){
+    const y = new Date(); y.setDate(y.getDate() - 1);
+    g.streakDays = (g.lastPlayDay === dayKey(y)) ? g.streakDays + 1 : 1;
+    g.lastPlayDay = today;
+    checkBadge("streak_3", g.streakDays >= 3);
+    checkBadge("streak_7", g.streakDays >= 7);
+  }
+  const before = g.dayCount;
+  g.dayCount += wordsCount;
+  if(before < g.dayGoal && g.dayCount >= g.dayGoal){
+    toast("🎉 " + t("goal_done"));
+    confettiBurst(30);
+    sfx("badge");
+  }
+}
+
+/* ---------- game bar (library) ---------- */
+function renderGameBar(){
+  ensureToday();
+  const g = DB.game;
+  const li = levelOf(g.xp), L = LEVELS[li], next = LEVELS[li+1] || null;
+  const span = next ? next.xp - L.xp : 1;
+  const into = next ? g.xp - L.xp : 1;
+  const pct = Math.min(100, Math.round(into / span * 100));
+  const goalPct = Math.min(100, Math.round(g.dayCount / g.dayGoal * 100));
+  const slot = document.getElementById("game-slot");
+  slot.innerHTML =
+    '<div class="game-bar">' +
+      '<div class="gb-level"><div class="gb-ic">' + L.ic + '</div><div>' +
+        '<div class="gb-lname">' + esc(L[DB.lang] || L.ru) + '</div>' +
+        '<div class="gb-lxp">' + g.xp + ' XP · ' + esc(t("lvl")) + ' ' + (li+1) + '</div>' +
+      '</div></div>' +
+      '<div class="gb-bars">' +
+        '<div class="gb-row"><div class="prog"><i style="width:' + pct + '%;background:var(--rose)"></i></div>' +
+        '<span class="lab">' + (next ? into + '/' + span + ' XP' : 'MAX') + '</span></div>' +
+        '<div class="gb-row"><div class="prog"><i style="width:' + goalPct + '%"></i></div>' +
+        '<span class="lab">' + esc(t("today")) + ' ' + g.dayCount + '/' + g.dayGoal + '</span></div>' +
+      '</div>' +
+      (g.streakDays > 0 ? '<div class="gb-flame"><span>🔥</span>' + g.streakDays + ' ' + plur(g.streakDays, t("streak_days")) + '</div>' : "") +
+      '<button type="button" class="btn btn-ghost btn-sm" id="btn-badges">🏅 <span>' + esc(t("bd_btn")) + '</span></button>' +
+    '</div>';
+  document.getElementById("btn-badges").onclick = ()=>{ renderBadges(); openModal("m-badges"); };
+}
+function renderBadges(){
+  const g = DB.game;
+  document.getElementById("badge-grid").innerHTML = BADGES.map(b=>{
+    const has = g.badges.includes(b.id);
+    const L = b[DB.lang] || b.ru;
+    return '<div class="badge' + (has ? "" : " locked") + '">' +
+      '<div class="bi">' + b.ic + '</div>' +
+      '<div class="bn">' + esc(L.n) + '</div>' +
+      '<div class="bd">' + esc(L.d) + '</div></div>';
+  }).join("");
+}
+
+/* ================= quiz (тест із варіантами) ================= */
+function renderTrainerCurrent(){
+  if(TR.mode === "quiz") startQuiz();
+  else renderTrainer();
+}
+function syncModeSw(){
+  document.getElementById("mode-type").classList.toggle("on", TR.mode === "type");
+  document.getElementById("mode-quiz").classList.toggle("on", TR.mode === "quiz");
+}
+function setMode(m){
+  if(!TR || TR.mode === m) return;
+  if(m === "quiz" && quizPool().length < 2){ toast(t("quiz_short"), true); return; }
+  TR.mode = m;
+  syncModeSw();
+  rebuildItems();
+  renderTrainerCurrent();
+}
+function quizPool(){
+  if(TR.sid) return getSet(TR.sid).words.filter(w=>w.en.trim() && w.tr.trim());
+  const out = [];
+  DB.sets.forEach(s=>s.words.forEach(w=>{ if(w.en.trim() && w.tr.trim()) out.push(w); }));
+  return out;
+}
+function startQuiz(){
+  TR.quiz = { idx:0, ok:0, bad:0, xp:0, answered:false, opts:[], done:false };
+  renderQuiz();
+}
+function renderQuiz(){
+  const q = TR.quiz;
+  document.querySelector("#view-trainer .tr-foot").style.display = "none";
+  if(q.idx >= TR.items.length){ renderQuizDone(); return; }
+  const it = TR.items[q.idx];
+  const w = getWord(it.sid, it.wid);
+  if(!w){ q.idx++; renderQuiz(); return; }
+  const isEnPrompt = TR.dir === "en2tr";
+  const prompt = isEnPrompt ? w.en : w.tr;
+  const correct = isEnPrompt ? w.tr : w.en;
+
+  const pool = shuffleArr(quizPool().filter(x=>x.id !== w.id));
+  const opts = [{txt:correct, ok:true}];
+  for(let i = 0; i < pool.length && opts.length < 4; i++){
+    const cand = isEnPrompt ? pool[i].tr : pool[i].en;
+    if(!opts.some(o=>norm(o.txt) === norm(cand))) opts.push({txt:cand, ok:false});
+  }
+  shuffleArr(opts);
+  q.opts = opts;
+  q.answered = false;
+
+  const srcSet = !TR.sid ? getSet(it.sid) : null;
+  const list = document.getElementById("tr-list");
+  list.innerHTML =
+    '<div class="quiz-card">' +
+      '<div class="quiz-prog"><div class="prog"><i style="width:' + Math.round(q.idx / TR.items.length * 100) + '%"></i></div>' +
+      '<span class="qt">' + (q.idx+1) + ' / ' + TR.items.length + '</span></div>' +
+      '<div class="quiz-word"><span>' + esc(prompt) + '</span>' +
+      (isEnPrompt ? '<button type="button" class="btn-icon" id="quiz-say" style="width:36px;height:36px" title="' + esc(t("speak_aria")) + '" aria-label="' + esc(t("speak_aria")) + '">' + IC.speaker + '</button>' : "") +
+      '</div>' +
+      (srcSet ? '<span class="quiz-src">' + esc(srcSet.name) + '</span>' : "") +
+      '<div class="quiz-hint">' + esc(t(isEnPrompt ? "q_hint_tr" : "q_hint_en")) + '</div>' +
+      '<div class="quiz-opts">' +
+        opts.map((o,i)=>'<button type="button" class="quiz-opt" data-i="' + i + '"><span class="let">' + "ABCD"[i] + '</span><span>' + esc(o.txt) + '</span></button>').join("") +
+      '</div>' +
+      '<div class="quiz-verdict" id="quiz-verdict"></div>' +
+      '<div class="quiz-foot"><button type="button" class="btn btn-primary" id="btn-qnext" style="display:none">' +
+      esc(t(q.idx === TR.items.length - 1 ? "q_finish" : "q_next")) + '</button></div>' +
+    '</div>';
+  const sayBtn = document.getElementById("quiz-say");
+  if(sayBtn) sayBtn.onclick = ()=>speak(w.en);
+  list.querySelectorAll(".quiz-opt").forEach(b=> b.onclick = ()=>answerQuiz(+b.dataset.i, b));
+  document.getElementById("btn-qnext").onclick = ()=>{ q.idx++; renderQuiz(); };
+}
+function answerQuiz(i, btn){
+  const q = TR.quiz;
+  if(!q || q.answered) return;
+  q.answered = true;
+  const it = TR.items[q.idx];
+  const w = getWord(it.sid, it.wid);
+  const o = q.opts[i];
+  const vd = document.getElementById("quiz-verdict");
+  document.querySelectorAll("#tr-list .quiz-opt").forEach((b, j)=>{
+    b.disabled = true;
+    if(q.opts[j].ok) b.classList.add("ok");
+  });
+  if(o.ok){
+    q.ok++; q.xp += 5;
+    w.streak = (w.streak || 0) + 1;
+    if(w.streak >= 2) w.need = false;
+    vd.className = "quiz-verdict g";
+    vd.textContent = "✓ " + t("q_correct");
+    addXP(5, btn);
+  } else {
+    q.bad++;
+    btn.classList.add("bad");
+    w.need = true; w.streak = 0;
+    vd.className = "quiz-verdict r";
+    vd.textContent = "✗ " + t("q_wrong") + " " + q.opts.find(x=>x.ok).txt;
+    sfx("no");
+  }
+  save();
+  const nb = document.getElementById("btn-qnext");
+  nb.style.display = "";
+  nb.focus();
+}
+function renderQuizDone(){
+  const q = TR.quiz;
+  q.done = true;
+  const total = TR.items.length;
+  const perfect = total > 0 && q.ok === total;
+  markActivity(q.ok + q.bad);
+  checkBadge("first_round", true);
+  checkBadge("quiz_first", true);
+  if(perfect && total >= 3){ q.xp += 10; addXP(10, null); }
+  if(perfect && total >= 5) checkBadge("perfect", true);
+  checkLearnedBadges();
+  save();
+  const ratio = total ? q.ok / total : 0;
+  const ic = perfect ? "🏆" : ratio >= 0.7 ? "🌸" : "🌱";
+  const msg = perfect ? t("q_perfect") : ratio >= 0.7 ? t("q_good") : t("q_keep");
+  document.getElementById("tr-list").innerHTML =
+    '<div class="quiz-card quiz-done">' +
+      '<div class="big-ic">' + ic + '</div>' +
+      '<h2>' + esc(t("q_done_h")) + '</h2>' +
+      '<div class="score-big">' + q.ok + ' / ' + total + '</div>' +
+      '<p>' + esc(msg) + '</p>' +
+      '<div class="xp-line">+' + q.xp + ' XP</div>' +
+      '<div class="quiz-foot">' +
+        '<button type="button" class="btn btn-ghost" id="btn-qagain">' + esc(t("q_again")) + '</button>' +
+        '<button type="button" class="btn btn-primary" id="btn-qexit">' + esc(TR.sid ? t("back_to_set") : t("back_to_list")) + '</button>' +
+      '</div>' +
+    '</div>';
+  document.getElementById("btn-qagain").onclick = ()=>{ rebuildItems(); startQuiz(); };
+  document.getElementById("btn-qexit").onclick = ()=>{ if(TR.sid) openEditor(TR.sid); else showView("review"); };
+  if(perfect && total >= 3) confettiBurst(52);
+}
+/* клавіші 1–4 та Enter у тесті */
+document.addEventListener("keydown", e=>{
+  if(view !== "trainer" || !TR || TR.mode !== "quiz" || !TR.quiz || TR.quiz.done) return;
+  if(document.querySelector(".mback.on")) return;
+  const q = TR.quiz;
+  if(!q.answered && ["1","2","3","4"].indexOf(e.key) >= 0){
+    const b = document.querySelectorAll("#tr-list .quiz-opt")[+e.key - 1];
+    if(b) b.click();
+  } else if(q.answered && e.key === "Enter"){
+    const nb = document.getElementById("btn-qnext");
+    if(nb) nb.click();
+  }
 });
 </script>
 <script>
@@ -1491,6 +2053,11 @@ function setLang(l){
 
 /* ================= global bindings ================= */
 function bindAll(){
+  document.getElementById("btn-sound").onclick = ()=>{
+    DB.game.sound = !DB.game.sound;
+    save(); syncSoundBtn();
+    if(DB.game.sound) sfx("ok");
+  };
   document.getElementById("lang-ua").onclick = ()=>setLang("ua");
   document.getElementById("lang-ru").onclick = ()=>setLang("ru");
   document.getElementById("btn-backup").onclick = doBackup;
@@ -1596,14 +2163,16 @@ function bindAll(){
   };
 
   /* trainer bar */
-  document.getElementById("dir-en2tr").onclick = ()=>{ if(TR && !TR.checked){ TR.dir="en2tr"; syncDir(); renderTrainer(); } };
-  document.getElementById("dir-tr2en").onclick = ()=>{ if(TR && !TR.checked){ TR.dir="tr2en"; syncDir(); renderTrainer(); } };
+  document.getElementById("mode-type").onclick = ()=>setMode("type");
+  document.getElementById("mode-quiz").onclick = ()=>setMode("quiz");
+  document.getElementById("dir-en2tr").onclick = ()=>{ if(TR && !TR.checked){ TR.dir="en2tr"; syncDir(); renderTrainerCurrent(); } };
+  document.getElementById("dir-tr2en").onclick = ()=>{ if(TR && !TR.checked){ TR.dir="tr2en"; syncDir(); renderTrainerCurrent(); } };
   document.getElementById("tg-shuffle").onclick = e=>{
     if(!TR || TR.checked) return;
     TR.shuffled = !TR.shuffled;
     e.currentTarget.classList.toggle("on", TR.shuffled);
     e.currentTarget.setAttribute("aria-pressed", TR.shuffled);
-    rebuildItems(); renderTrainer();
+    rebuildItems(); renderTrainerCurrent();
   };
   document.getElementById("tg-marked").onclick = e=>{
     if(!TR || TR.checked) return;
@@ -1612,10 +2181,10 @@ function bindAll(){
     e.currentTarget.setAttribute("aria-pressed", TR.markedOnly);
     rebuildItems();
     if(!TR.items.length){ toast(t("t_nothing")); TR.markedOnly = false; e.currentTarget.classList.remove("on"); rebuildItems(); }
-    renderTrainer();
+    renderTrainerCurrent();
   };
-  document.getElementById("btn-restart").onclick = ()=>{ if(TR){ rebuildItems(); renderTrainer(); } };
-  document.getElementById("btn-check").onclick = doCheck;
+  document.getElementById("btn-restart").onclick = ()=>{ if(TR){ rebuildItems(); renderTrainerCurrent(); } };
+  document.getElementById("btn-check").onclick = doCheckAll;
   document.getElementById("btn-retry").onclick = doRetry;
 
   /* modals: close buttons / backdrop / Esc */
@@ -1646,7 +2215,9 @@ function syncDir(){
     seedDemo();
   }
   if(!DB.lang) DB.lang = "ua";
+  ensureGame();
   bindAll();
+  syncSoundBtn();
   applyI18n();
   showView("library");
 })();
