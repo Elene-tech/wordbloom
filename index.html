@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WordBloom — словарь, который расцветает</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+/* ============ WordBloom design tokens ============ */
+:root{
+  --bg:#FCF6EF;
+  --bg-soft:#F6EBDD;
+  --ink:#45332C;
+  --ink-soft:#6E564C;
+  --line:#D6BEAC;
+  --white:#FFFEFC;
+
+  --pink:#FFADC9;
+  --peach:#FF9E5E;
+  --blue:#8FDAEC;
+  --lavender:#AC93D6;
+  --sage:#A5DB8B;
+  --beige:#DDC5AE;
+
+  --rose:#CE5A89;        /* primary action, derived from pink */
+  --rose-deep:#A93F6E;
+  --peach-deep:#C25E1E;
+  --green:#3F8F49;       /* derived from sage */
+  --green-soft:#D9EEC8;
+  --red:#C84538;
+  --red-soft:#F9DAD4;
+  --violet:#6E5899;      /* derived from lavender */
+  --violet-soft:#E4DBF4;
+  --amber:#B27A1E;
+  --amber-soft:#F8E2B8;
+
+  --r-lg:26px;
+  --r-md:18px;
+  --r-sm:12px;
+  --shadow:0 6px 24px rgba(84,69,63,.08);
+  --shadow-hover:0 10px 30px rgba(84,69,63,.14);
+  --font-ui:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-display:'Comfortaa',var(--font-ui);
+  --font-hand:'Caveat',cursive;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-ui);
+  background:var(--bg);
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.55;
+  min-height:100dvh;
+}
+::selection{background:var(--pink)}
+::placeholder{color:#A08575;opacity:1}
+
+/* decorative garden background */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(420px 300px at 8% -4%, rgba(255,173,201,.6), transparent 70%),
+    radial-gradient(520px 340px at 96% 4%, rgba(143,218,236,.55), transparent 70%),
+    radial-gradient(480px 360px at 50% 108%, rgba(165,219,139,.5), transparent 70%);
+}
+
+h1,h2,h3,.display{font-family:var(--font-display);font-weight:700;letter-spacing:.2px}
+button{font-family:var(--font-ui);cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:var(--font-ui);font-size:16px;color:var(--ink)}
+:focus-visible{outline:3px solid var(--lavender);outline-offset:2px;border-radius:6px}
+
+/* ============ header ============ */
+header{
+  position:sticky;top:0;z-index:20;
+  background:rgba(253,248,243,.88);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.hd-in{max-width:1060px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;user-select:none}
+.logo svg{width:38px;height:38px}
+.logo .name{font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--ink)}
+.logo .name em{font-style:normal;color:var(--rose)}
+.logo .tag{font-size:12px;color:var(--ink-soft);display:block;line-height:1.1}
+.hd-spacer{flex:1}
+.lang-sw{display:flex;background:var(--white);border:1.5px solid var(--line);border-radius:999px;padding:3px;gap:2px}
+.lang-sw button{padding:5px 12px;border-radius:999px;font-weight:800;font-size:13px;color:var(--ink-soft);min-height:34px}
+.lang-sw button.on{background:var(--lavender);color:#fff}
+.hd-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--white);border:1.5px solid var(--line);border-radius:999px;
+  padding:8px 14px;font-weight:700;font-size:14px;color:var(--ink);
+  min-height:40px;transition:transform .15s ease,box-shadow .15s ease,background .15s ease;
+}
+.hd-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.hd-btn svg{width:17px;height:17px;flex:none}
+
+/* ============ layout ============ */
+main{max-width:1060px;margin:0 auto;padding:26px 18px 90px}
+.view{display:none;animation:fadeUp .45s ease both}
+.view.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.view{animation:none}}
+
+.view-head{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.view-head h1{font-size:30px}
+.view-head .sub{color:var(--ink-soft);font-size:14px;width:100%}
+
+/* ============ buttons ============ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:999px;padding:11px 20px;font-weight:800;font-size:15px;
+  min-height:44px;transition:transform .15s ease,box-shadow .15s ease,background .15s ease,opacity .15s;
+  border:2px solid transparent;text-decoration:none;
+}
+.btn svg{width:18px;height:18px;flex:none}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-primary{background:var(--rose);color:#fff}
+.btn-primary:hover{background:var(--rose-deep)}
+.btn-peach{background:var(--peach);color:#5A3416}
+.btn-peach:hover{background:#F5A468}
+.btn-ghost{background:var(--white);border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--lavender)}
+.btn-green{background:var(--green);color:#fff}
+.btn-sm{padding:7px 14px;min-height:38px;font-size:14px}
+.btn-icon{
+  width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  background:var(--white);border:1.5px solid var(--line);transition:all .15s ease;flex:none;
+}
+.btn-icon:hover{transform:translateY(-1px);box-shadow:var(--shadow);border-color:var(--lavender)}
+.btn-icon svg{width:18px;height:18px}
+.btn-icon.danger:hover{border-color:var(--red);background:var(--red-soft)}
+
+/* ============ library: set cards ============ */
+.sets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.set-card{
+  position:relative;border-radius:var(--r-lg);padding:20px 20px 16px;
+  background:var(--white);box-shadow:var(--shadow);border:1px solid var(--line);
+  display:flex;flex-direction:column;gap:12px;transition:transform .18s ease,box-shadow .18s ease;
+  overflow:hidden;
+}
+.set-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
+.set-card .swatch{position:absolute;inset:0 0 auto 0;height:74px;z-index:0}
+.set-card.ci0 .swatch{background:linear-gradient(135deg,var(--pink),#FFCEDE)}
+.set-card.ci1 .swatch{background:linear-gradient(135deg,var(--peach),#FFC9A3)}
+.set-card.ci2 .swatch{background:linear-gradient(135deg,var(--blue),#C2EDF6)}
+.set-card.ci3 .swatch{background:linear-gradient(135deg,var(--lavender),#CDBDEB)}
+.set-card.ci4 .swatch{background:linear-gradient(135deg,var(--sage),#CDEBBA)}
+.set-card.ci5 .swatch{background:linear-gradient(135deg,var(--beige),#EDDFD0)}
+.set-card>*{position:relative;z-index:1}
+.set-name{font-family:var(--font-display);font-weight:700;font-size:19px;padding-top:44px;word-break:break-word}
+.set-meta{font-size:13px;color:var(--ink-soft);display:flex;gap:10px;flex-wrap:wrap}
+.prog{height:9px;border-radius:99px;background:rgba(84,69,63,.1);overflow:hidden}
+.prog>i{display:block;height:100%;border-radius:99px;background:var(--green);transition:width .4s ease}
+.prog-txt{font-size:12.5px;color:var(--ink-soft);font-weight:700}
+.set-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.set-actions .btn{flex:1;min-width:0}
+.corner-tools{position:absolute;top:12px;right:12px;display:flex;gap:6px;z-index:2}
+.corner-tools .btn-icon{width:34px;height:34px;background:rgba(255,254,252,.85)}
+.corner-tools .btn-icon svg{width:15px;height:15px}
+
+.new-card{
+  border:2.5px dashed var(--lavender);border-radius:var(--r-lg);min-height:210px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  color:var(--violet);font-weight:800;font-size:17px;background:rgba(255,254,252,.55);
+  transition:all .18s ease;
+}
+.new-card:hover{background:var(--violet-soft);transform:translateY(-3px)}
+.new-card svg{width:40px;height:40px}
+
+/* empty state */
+.empty{
+  text-align:center;padding:56px 20px;background:var(--white);border-radius:var(--r-lg);
+  border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.empty svg{width:74px;height:74px;margin-bottom:14px}
+.empty h2{font-size:22px;margin-bottom:8px}
+.empty p{color:var(--ink-soft);max-width:46ch;margin:0 auto 18px}
+
+/* review banner */
+.review-banner{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  background:linear-gradient(120deg,var(--violet-soft),#F6F1FC);
+  border:1.5px solid var(--lavender);border-radius:var(--r-lg);
+  padding:16px 20px;margin-bottom:22px;
+}
+.review-banner .ic{width:46px;height:46px;border-radius:50%;background:var(--lavender);display:flex;align-items:center;justify-content:center;flex:none}
+.review-banner .ic svg{width:24px;height:24px}
+.review-banner b{font-size:17px}
+.review-banner p{font-size:13.5px;color:var(--ink-soft)}
+.review-banner .grow{flex:1;min-width:180px}
+
+/* ============ editor ============ */
+.ed-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.ed-name{
+  font-family:var(--font-display);font-weight:700;font-size:24px;
+  border:none;border-bottom:3px solid transparent;background:transparent;
+  padding:4px 2px;min-width:200px;flex:1;max-width:520px;color:var(--ink);
+}
+.ed-name:focus{outline:none;border-bottom-color:var(--rose)}
+.limit-note{
+  display:none;align-items:center;gap:10px;background:var(--amber-soft);
+  border:1.5px solid #E0B96E;color:#6B4708;border-radius:var(--r-md);
+  padding:10px 16px;font-size:14px;font-weight:600;margin-bottom:14px;flex-wrap:wrap;
+}
+.limit-note.on{display:flex}
+.wtable{display:flex;flex-direction:column;gap:10px}
+.wrow{
+  display:grid;grid-template-columns:34px 1fr 1fr auto;gap:10px;align-items:center;
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:10px 12px;box-shadow:0 2px 8px rgba(84,69,63,.04);
+}
+.wrow .num{font-family:var(--font-display);font-weight:600;color:var(--ink-soft);font-size:14px;text-align:center}
+.wrow input[type=text]{
+  width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);
+  padding:9px 12px;background:var(--bg);transition:border-color .15s;
+}
+.wrow input[type=text]:focus{outline:none;border-color:var(--rose);background:#fff}
+.wrow .en-in{font-weight:700}
+.wrow-tools{display:flex;gap:6px;align-items:center}
+.wrow .ex-area{grid-column:1/-1;display:none;gap:10px;padding-top:4px}
+.wrow .ex-area.on{display:grid;grid-template-columns:1fr 1fr}
+.ex-box label{font-size:12px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px}
+.ex-box textarea{
+  width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--bg);
+  padding:8px 12px;min-height:54px;resize:vertical;font-size:15px;
+}
+.ex-box textarea:focus{outline:none;border-color:var(--lavender);background:#fff}
+.ex-box.teacher textarea{background:var(--violet-soft);border-color:#C2ADE3;font-family:var(--font-hand);font-size:19px}
+.ex-toggle{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:800;color:var(--violet);padding:6px 8px;border-radius:8px;min-height:34px}
+.ex-toggle:hover{background:var(--violet-soft)}
+.ex-toggle svg{width:14px;height:14px}
+.ed-bottom{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+
+/* ============ trainer ============ */
+.tr-bar{
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:14px 18px;box-shadow:var(--shadow);margin-bottom:18px;
+}
+.dir-sw{display:flex;background:var(--bg-soft);border-radius:999px;padding:4px;gap:4px}
+.dir-sw button{padding:8px 16px;border-radius:999px;font-weight:800;font-size:14px;color:var(--ink-soft);min-height:40px}
+.dir-sw button.on{background:var(--white);color:var(--ink);box-shadow:0 2px 8px rgba(84,69,63,.12)}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;min-height:40px;padding:4px 2px;cursor:pointer;user-select:none}
+.toggle .tk{width:44px;height:26px;border-radius:99px;background:#C2AB9A;position:relative;transition:background .2s;flex:none}
+.toggle .tk::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle.on .tk{background:var(--green)}
+.toggle.on .tk::after{left:21px}
+.tr-list{display:flex;flex-direction:column;gap:10px}
+.tr-row{
+  display:grid;grid-template-columns:34px 1fr 1fr auto;gap:10px;align-items:center;
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r-md);padding:10px 12px;
+}
+.tr-row .num{font-family:var(--font-display);font-weight:600;color:var(--ink-soft);font-size:14px;text-align:center}
+.tr-prompt{font-weight:700;word-break:break-word;display:flex;align-items:center;gap:8px;min-width:0}
+.tr-prompt .src{font-size:11px;font-weight:800;color:var(--violet);background:var(--violet-soft);border-radius:99px;padding:2px 9px;flex:none}
+.tr-ans{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:9px 12px;background:var(--bg)}
+.tr-ans:focus{outline:none;border-color:var(--rose);background:#fff}
+.tr-ans:disabled{background:var(--bg-soft);color:var(--ink)}
+.tr-row.ok{border-color:#BFE0BC;background:var(--green-soft)}
+.tr-row.bad{border-color:#EFB7B1;background:var(--red-soft)}
+.tr-row.hint{border-color:#D5C9EC;background:var(--violet-soft)}
+.tr-row.skip{border-color:#C9B29C;background:#FBF4E9}
+.tr-verdict{grid-column:1/-1;font-size:14px;display:none;align-items:center;gap:8px;flex-wrap:wrap;padding-top:2px}
+.tr-row.ok .tr-verdict,.tr-row.bad .tr-verdict,.tr-row.hint .tr-verdict,.tr-row.skip .tr-verdict{display:flex}
+.tr-verdict .lab{font-weight:800}
+.tr-row.ok .lab{color:var(--green)}
+.tr-row.bad .lab{color:var(--red)}
+.tr-row.hint .lab{color:var(--violet)}
+.tr-row.skip .lab{color:var(--ink-soft)}
+mark.fix{background:var(--amber-soft);color:#8A5410;border-radius:4px;padding:0 2px;font-weight:800}
+.tr-status{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;font-weight:800}
+.tr-row.ok .tr-status{background:var(--green);color:#fff}
+.tr-row.bad .tr-status{background:var(--red);color:#fff}
+.tr-row.hint .tr-status{background:var(--violet);color:#fff}
+.tr-row.skip .tr-status{background:#B39A87;color:#fff}
+.tr-foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.tr-score{
+  display:none;align-items:center;gap:12px;background:var(--white);border:1px solid var(--line);
+  border-radius:var(--r-md);padding:10px 18px;font-weight:800;box-shadow:var(--shadow);flex-wrap:wrap;
+}
+.tr-score.on{display:flex}
+.tr-score .big{font-family:var(--font-display);font-size:20px}
+.chip{border-radius:99px;padding:3px 11px;font-size:13px;font-weight:800}
+.chip.g{background:var(--green-soft);color:var(--green)}
+.chip.r{background:var(--red-soft);color:var(--red)}
+.chip.v{background:var(--violet-soft);color:var(--violet)}
+
+/* ============ review (на доработку) ============ */
+.rv-group{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.rv-group>h3{padding:14px 18px;font-size:17px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}
+.rv-group>h3 .dot{width:14px;height:14px;border-radius:50%;flex:none}
+.rv-item{display:flex;align-items:center;gap:12px;padding:11px 18px;border-bottom:1px solid var(--bg-soft);flex-wrap:wrap}
+.rv-item:last-child{border-bottom:none}
+.rv-item .en{font-weight:800}
+.rv-item .tr{color:var(--ink-soft)}
+.rv-item .streak{margin-left:auto;display:flex;gap:4px;align-items:center;font-size:12.5px;font-weight:800;color:var(--ink-soft)}
+.petal{width:16px;height:16px;border-radius:50%;border:2px solid var(--sage);background:transparent}
+.petal.f{background:var(--green);border-color:var(--green)}
+
+/* ============ modal ============ */
+.mback{
+  position:fixed;inset:0;background:rgba(84,69,63,.45);z-index:50;
+  display:none;align-items:center;justify-content:center;padding:18px;
+}
+.mback.on{display:flex}
+.modal{
+  background:var(--white);border-radius:var(--r-lg);box-shadow:0 24px 60px rgba(84,69,63,.25);
+  max-width:560px;width:100%;max-height:88dvh;overflow:auto;padding:24px;animation:pop .25s ease both;
+}
+@keyframes pop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+.modal h2{font-size:21px;margin-bottom:12px}
+.modal p{font-size:14.5px;color:var(--ink-soft);margin-bottom:12px}
+.modal textarea{
+  width:100%;min-height:140px;border:1.5px solid var(--line);border-radius:var(--r-md);
+  padding:12px;background:var(--bg);resize:vertical;font-size:15px;
+}
+.modal textarea:focus{outline:none;border-color:var(--rose);background:#fff}
+.modal .m-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.modal input[type=file]{font-size:14px}
+.m-note{font-size:13px;background:var(--bg-soft);border-radius:var(--r-sm);padding:10px 14px;margin-top:10px;color:var(--ink-soft)}
+.code-box{
+  width:100%;min-height:110px;max-height:180px;overflow:auto;word-break:break-all;
+  background:var(--bg-soft);border:1.5px solid var(--line);border-radius:var(--r-md);
+  padding:12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;user-select:all;
+}
+
+/* toast */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#FDF8F3;border-radius:999px;padding:11px 22px;font-weight:700;
+  font-size:14.5px;opacity:0;pointer-events:none;transition:all .25s ease;z-index:99;max-width:90vw;text-align:center;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--red)}
+
+/* back link */
+.back-link{display:inline-flex;align-items:center;gap:7px;font-weight:800;color:var(--violet);font-size:14.5px;padding:8px 4px;min-height:40px}
+.back-link:hover{text-decoration:underline}
+.back-link svg{width:16px;height:16px}
+
+/* footer note */
+.foot-note{max-width:1060px;margin:0 auto;padding:0 18px 30px;color:var(--ink-soft);font-size:13px;text-align:center}
+
+/* ============ mobile ============ */
+@media (max-width:640px){
+  .logo .tag{display:none}
+  .hd-btn span{display:none}
+  .hd-btn{padding:8px 11px}
+  .view-head h1{font-size:25px}
+  .wrow{grid-template-columns:26px 1fr auto;gap:8px}
+  .wrow .tr-wrap{grid-column:2/3}
+  .wrow .num{grid-row:1}
+  .wrow .en-wrap{grid-column:2/3}
+  .wrow .wrow-tools{grid-row:1;grid-column:3;flex-direction:column}
+  .wrow .ex-area.on{grid-template-columns:1fr}
+  .tr-row{grid-template-columns:26px 1fr auto;gap:8px}
+  .tr-row .tr-prompt{grid-column:2/3}
+  .tr-row .ans-wrap{grid-column:1/-1}
+  .tr-row .num{display:none}
+  .tr-row .tr-status{grid-row:1;grid-column:3}
+  .sets-grid{grid-template-columns:1fr}
+}
+
+/* worksheet modal */
+.ws-opts{display:flex;flex-direction:column;gap:12px;margin:6px 0 4px}
+.ws-opts .dir-sw{align-self:flex-start}
+.ws-check{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;min-height:40px;cursor:pointer;user-select:none}
+.ws-check input{width:20px;height:20px;accent-color:var(--rose);cursor:pointer}
+
+/* ============ print ============ */
+#print-area{display:none}
+@media print{
+  body::before,header,main,.foot-note,.toast{display:none !important}
+  #print-area{display:block;color:#000}
+  #print-area h1{font-size:22pt;margin-bottom:4pt}
+  #print-area .p-sub{font-size:10pt;color:#444;margin-bottom:12pt}
+  #print-area table{width:100%;border-collapse:collapse;font-size:11pt}
+  #print-area th{text-align:left;border-bottom:2pt solid #000;padding:4pt 6pt}
+  #print-area td{border-bottom:.5pt solid #999;padding:4pt 6pt;vertical-align:top}
+  #print-area .p-ex{font-size:9pt;color:#444;font-style:italic}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-in">
+    <div class="logo">
+      <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M24 44c0-9 0-14 0-20" stroke="#4E9A51" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M24 34c-5.5 0-9.5-3.2-10-8.5 5.5 0 9.5 3.2 10 8.5z" fill="#C9E7B5" stroke="#4E9A51" stroke-width="1.6"/>
+        <path d="M24 30c5.5 0 9.5-3.2 10-8.5-5.5 0-9.5 3.2-10 8.5z" fill="#BBE9F2" stroke="#4E9A51" stroke-width="1.6"/>
+        <circle cx="24" cy="15" r="6.2" fill="#FFD3E0" stroke="#D96B97" stroke-width="1.8"/>
+        <circle cx="24" cy="15" r="2.4" fill="#D96B97"/>
+        <path d="M18.6 10.5c-1.8-2.8 1-6 3.9-4.7M29.4 10.5c1.8-2.8-1-6-3.9-4.7" stroke="#D96B97" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <span class="name">Word<em>Bloom</em></span>
+        <span class="tag" data-i18n="tagline">словарь, который расцветает</span>
+      </div>
+    </div>
+    <div class="hd-spacer"></div>
+    <div class="lang-sw" role="group" aria-label="Language">
+      <button type="button" id="lang-ua">UA</button>
+      <button type="button" id="lang-ru">RU</button>
+    </div>
+    <button type="button" class="hd-btn" id="btn-backup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span data-i18n="backup">Резервная копия</span>
+    </button>
+    <button type="button" class="hd-btn" id="btn-restore">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span data-i18n="restore">Восстановить</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ============ LIBRARY ============ -->
+  <section class="view on" id="view-library">
+    <div class="view-head">
+      <h1 data-i18n="lib_title">Мои коллекции</h1>
+      <span class="sub" data-i18n="lib_sub">Наборы слов и фраз для изучения. Откройте набор, чтобы редактировать, или начните тренировку.</span>
+    </div>
+    <div id="review-slot"></div>
+    <div class="sets-grid" id="sets-grid"></div>
+  </section>
+
+  <!-- ============ EDITOR ============ -->
+  <section class="view" id="view-editor">
+    <button type="button" class="back-link" data-go="library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span data-i18n="back">К коллекциям</span>
+    </button>
+    <div class="ed-top">
+      <input type="text" class="ed-name" id="ed-name" maxlength="60" aria-label="Название набора">
+      <div class="hd-spacer"></div>
+      <button type="button" class="btn btn-ghost btn-sm" id="btn-bulk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+        <span data-i18n="bulk_add">Вставить списком</span>
+      </button>
+      <button type="button" class="btn btn-ghost btn-sm" id="btn-print">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span data-i18n="print">Печать</span>
+      </button>
+      <button type="button" class="btn btn-ghost btn-sm" id="btn-worksheet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+        <span data-i18n="worksheet">Рабочий лист</span>
+      </button>
+      <button type="button" class="btn btn-peach btn-sm" id="btn-train">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span data-i18n="train">Тренировать</span>
+      </button>
+    </div>
+    <div class="limit-note" id="limit-note">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span data-i18n="limit_txt">В наборе больше 20 слов — короткие наборы учатся легче. Можно разделить его на части по 20.</span>
+      <button type="button" class="btn btn-ghost btn-sm" id="btn-split" data-i18n="split">Разделить по 20</button>
+    </div>
+    <div class="wtable" id="wtable"></div>
+    <div class="ed-bottom">
+      <button type="button" class="btn btn-ghost" id="btn-addrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span data-i18n="add_word">Добавить слово</span>
+      </button>
+      <div class="hd-spacer"></div>
+      <span class="prog-txt" id="ed-count"></span>
+    </div>
+  </section>
+
+  <!-- ============ TRAINER ============ -->
+  <section class="view" id="view-trainer">
+    <button type="button" class="back-link" id="tr-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span id="tr-back-txt">К набору</span>
+    </button>
+    <div class="view-head">
+      <h1 id="tr-title">Тренировка</h1>
+    </div>
+    <div class="tr-bar">
+      <div class="dir-sw" role="group" aria-label="Направление">
+        <button type="button" id="dir-en2tr">EN → <span data-i18n="tr_short">Перевод</span></button>
+        <button type="button" id="dir-tr2en"><span data-i18n="tr_short2">Перевод</span> → EN</button>
+      </div>
+      <button type="button" class="toggle on" id="tg-shuffle" aria-pressed="true">
+        <span class="tk"></span><span data-i18n="shuffle">Перемешать</span>
+      </button>
+      <button type="button" class="toggle" id="tg-marked" aria-pressed="false">
+        <span class="tk"></span><span data-i18n="only_marked">Только сложные</span>
+      </button>
+      <div class="hd-spacer"></div>
+      <button type="button" class="btn btn-ghost btn-sm" id="btn-restart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        <span data-i18n="restart">Заново</span>
+      </button>
+    </div>
+    <div class="tr-list" id="tr-list"></div>
+    <div class="tr-foot">
+      <button type="button" class="btn btn-primary" id="btn-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span data-i18n="check">Проверить</span>
+      </button>
+      <button type="button" class="btn btn-ghost" id="btn-retry" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        <span data-i18n="retry_wrong">Повторить ошибки</span>
+      </button>
+      <div class="tr-score" id="tr-score"></div>
+    </div>
+  </section>
+
+  <!-- ============ REVIEW (на доработку) ============ -->
+  <section class="view" id="view-review">
+    <button type="button" class="back-link" data-go="library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span data-i18n="back">К коллекциям</span>
+    </button>
+    <div class="view-head">
+      <h1 data-i18n="rv_title">На доработку</h1>
+      <span class="sub" data-i18n="rv_sub">Сюда попадают слова с ошибками и подсказками. Слово «расцветает» и уходит отсюда после двух верных ответов подряд без подсказок.</span>
+    </div>
+    <div id="rv-body"></div>
+  </section>
+</main>
+
+<!-- ============ MODALS ============ -->
+<div class="mback" id="m-newset">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2 data-i18n="m_new_title">Новая коллекция</h2>
+    <p data-i18n="m_new_sub">Назовите набор — например, темой или уроком: «Education», «IELTS Essay Linkers».</p>
+    <input type="text" id="newset-name" maxlength="60" style="width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:11px 14px;background:var(--bg)" data-i18n-ph="m_new_ph" placeholder="Название набора">
+    <div class="m-actions">
+      <button type="button" class="btn btn-ghost" data-close data-i18n="cancel">Отмена</button>
+      <button type="button" class="btn btn-primary" id="btn-createset" data-i18n="create">Создать</button>
+    </div>
+  </div>
+</div>
+
+<div class="mback" id="m-bulk">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2 data-i18n="m_bulk_title">Вставить списком</h2>
+    <p data-i18n="m_bulk_sub">По одной паре на строку: английское слово, затем тире или дефис, затем перевод. Можно скопировать из конспекта или Google Docs.</p>
+    <textarea id="bulk-text" placeholder="apple — яблоко&#10;to run — бежать&#10;look forward to — ждать с нетерпением"></textarea>
+    <div class="m-note" data-i18n="m_bulk_note">Строки без тире будут пропущены. Слова добавятся к текущему набору.</div>
+    <div class="m-actions">
+      <button type="button" class="btn btn-ghost" data-close data-i18n="cancel">Отмена</button>
+      <button type="button" class="btn btn-primary" id="btn-bulkadd" data-i18n="add">Добавить</button>
+    </div>
+  </div>
+</div>
+
+<div class="mback" id="m-import">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2 data-i18n="m_imp_title">Импорт набора</h2>
+    <p data-i18n="m_imp_sub">Вставьте код набора, которым поделился преподаватель, или выберите файл набора (.json). Подойдёт и простой список «слово — перевод».</p>
+    <textarea id="import-text" data-i18n-ph="m_imp_ph" placeholder="Вставьте код или список слов сюда…"></textarea>
+    <div class="m-actions" style="justify-content:space-between">
+      <input type="file" id="import-file" accept=".json,.txt,application/json,text/plain">
+    </div>
+    <div class="m-actions">
+      <button type="button" class="btn btn-ghost" data-close data-i18n="cancel">Отмена</button>
+      <button type="button" class="btn btn-primary" id="btn-doimport" data-i18n="do_import">Импортировать</button>
+    </div>
+  </div>
+</div>
+
+<div class="mback" id="m-export">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2 data-i18n="m_exp_title">Поделиться набором</h2>
+    <p data-i18n="m_exp_sub">Скачайте файл или скопируйте код — ученик вставит его в «Импорт» у себя, и набор появится в его библиотеке.</p>
+    <div class="code-box" id="export-code"></div>
+    <div class="m-actions">
+      <button type="button" class="btn btn-ghost" id="btn-copycode" data-i18n="copy_code">Скопировать код</button>
+      <button type="button" class="btn btn-primary" id="btn-dlfile" data-i18n="dl_file">Скачать файл</button>
+    </div>
+    <div class="m-actions">
+      <button type="button" class="btn btn-ghost" data-close data-i18n="close">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<div class="mback" id="m-worksheet">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2 data-i18n="m_ws_title">Рабочий лист</h2>
+    <p data-i18n="m_ws_sub">Распечатайте лист или сохраните в Word: ученик вписывает ответы от руки, а потом сверяет с ключом.</p>
+    <div class="ws-opts">
+      <div class="dir-sw" id="ws-dir" role="group" aria-label="Направление">
+        <button type="button" data-d="en2tr" class="on">EN → <span data-i18n="tr_short">Перевод</span></button>
+        <button type="button" data-d="tr2en"><span data-i18n="tr_short2">Перевод</span> → EN</button>
+      </div>
+      <label class="ws-check"><input type="checkbox" id="ws-shuffle" checked> <span data-i18n="shuffle">Перемешать</span></label>
+      <label class="ws-check"><input type="checkbox" id="ws-sent"> <span data-i18n="ws_sentences">Строки для своих предложений</span></label>
+      <label class="ws-check"><input type="checkbox" id="ws-key" checked> <span data-i18n="ws_key">Ключ ответов на отдельной странице</span></label>
+    </div>
+    <div class="m-actions">
+      <button type="button" class="btn btn-ghost" data-close data-i18n="cancel">Отмена</button>
+      <button type="button" class="btn btn-ghost" id="btn-ws-word">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+        <span data-i18n="ws_word">Скачать Word</span>
+      </button>
+      <button type="button" class="btn btn-primary" id="btn-ws-print">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span data-i18n="print">Печать</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="mback" id="m-confirm">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2 id="confirm-title">Удалить?</h2>
+    <p id="confirm-txt"></p>
+    <div class="m-actions">
+      <button type="button" class="btn btn-ghost" data-close data-i18n="cancel">Отмена</button>
+      <button type="button" class="btn btn-primary" id="btn-confirm-yes" style="background:var(--red)" data-i18n="delete">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<div class="mback" id="m-restore">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2 data-i18n="m_res_title">Восстановить копию</h2>
+    <p data-i18n="m_res_sub">Выберите файл резервной копии (.json). Внимание: текущие данные в этом браузере будут заменены.</p>
+    <input type="file" id="restore-file" accept=".json,application/json">
+    <div class="m-actions">
+      <button type="button" class="btn btn-ghost" data-close data-i18n="cancel">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="print-area"></div>
+<div class="foot-note" data-i18n="foot">WordBloom работает офлайн: все слова хранятся только в этом браузере. Делайте резервную копию время от времени.</div>
+
+<script>
+"use strict";
+/* ================= WordBloom — логика ================= */
+
+/* ---------- i18n ---------- */
+const I18N = {
+ua:{
+  tagline:"словник, що розцвітає",
+  backup:"Резервна копія", restore:"Відновити",
+  lib_title:"Мої колекції", lib_sub:"Набори слів і фраз для вивчення. Відкрийте набір, щоб редагувати, або почніть тренування.",
+  back:"До колекцій", bulk_add:"Вставити списком", print:"Друк", train:"Тренувати",
+  worksheet:"Робочий аркуш", m_ws_title:"Робочий аркуш",
+  m_ws_sub:"Надрукуйте аркуш або збережіть у Word: учень вписує відповіді від руки, а потім звіряє з ключем.",
+  ws_sentences:"Рядки для власних речень", ws_key:"Ключ відповідей на окремій сторінці",
+  ws_word:"Завантажити Word", ws_name:"Ім’я", ws_date:"Дата",
+  ws_write_tr:"Впишіть переклад", ws_write_en:"Впишіть English", key_title:"Ключ відповідей",
+  ws_sent_lab:"Власне речення", t_ws:"Аркуш готовий",
+  limit_txt:"У наборі більше 20 слів — короткі набори вчаться легше. Можна поділити його на частини по 20.",
+  split:"Поділити по 20", add_word:"Додати слово",
+  cancel:"Скасувати", create:"Створити", add:"Додати", close:"Закрити", delete:"Видалити",
+  m_new_title:"Нова колекція", m_new_sub:"Назвіть набір — наприклад, темою або уроком: «Education», «IELTS Essay Linkers».", m_new_ph:"Назва набору",
+  m_bulk_title:"Вставити списком", m_bulk_sub:"По одній парі на рядок: англійське слово, потім тире або дефіс, потім переклад. Можна скопіювати з конспекту чи Google Docs.",
+  m_bulk_note:"Рядки без тире будуть пропущені. Слова додадуться до поточного набору.",
+  m_imp_title:"Імпорт набору", m_imp_sub:"Вставте код набору, яким поділився викладач, або оберіть файл набору (.json). Підійде й простий список «слово — переклад».",
+  m_imp_ph:"Вставте код або список слів сюди…", do_import:"Імпортувати",
+  m_exp_title:"Поділитися набором", m_exp_sub:"Завантажте файл або скопіюйте код — учень вставить його в «Імпорт» у себе, і набір з’явиться в його бібліотеці.",
+  copy_code:"Скопіювати код", dl_file:"Завантажити файл",
+  m_res_title:"Відновити копію", m_res_sub:"Оберіть файл резервної копії (.json). Увага: поточні дані в цьому браузері будуть замінені.",
+  foot:"WordBloom працює офлайн: усі слова зберігаються лише в цьому браузері. Робіть резервну копію час від часу.",
+  tr_short:"Переклад", tr_short2:"Переклад", shuffle:"Перемішати", only_marked:"Тільки складні",
+  restart:"Заново", check:"Перевірити", retry_wrong:"Повторити помилки",
+  rv_title:"На доопрацювання", rv_sub:"Сюди потрапляють слова з помилками та підказками. Слово «розцвітає» і йде звідси після двох правильних відповідей поспіль без підказок.",
+  new_set:"Нова колекція", import_set:"Імпорт", open:"Відкрити",
+  empty_h:"Поки що пусто", empty_p:"Створіть першу колекцію — додайте слова вручну або вставте готовий список.",
+  words:["слово","слова","слів"], learned:"вивчено", of:"з",
+  review_cta:"Повторити", review_line:"чекають на повторення",
+  del_set_h:"Видалити набір?", del_set_p:"і всі слова в ньому будуть видалені безповоротно.",
+  del_word_h:"Видалити слово?", del_word_p:"Пару буде прибрано з набору.",
+  col_en:"English", col_tr:"Переклад", my_ex:"Моє речення", teacher_ex:"Приклад від викладача",
+  hint_aria:"Підказка: перша літера", speak_aria:"Озвучити", del_aria:"Видалити",
+  v_ok:"Правильно!", v_bad:"Правильна відповідь:", v_hint:"З підказкою", v_skip:"Пропущено",
+  you_wrote:"ви написали:", score_of:"із", review_all:"Тренувати всі",
+  rv_empty_h:"Все розцвіло!", rv_empty_p:"Немає складних слів. Так тримати!",
+  back_to_set:"До набору", back_to_list:"До списку",
+  t_saved:"Збережено", t_imported:"Набір імпортовано", t_words_added:"слів додано",
+  t_badcode:"Не вдалося розпізнати код або список", t_copied:"Код скопійовано",
+  t_backup:"Копію завантажено", t_restored:"Дані відновлено", t_deleted:"Видалено",
+  t_split:"Набір поділено на частини", t_nothing:"Немає що повторювати — помилок немає",
+  t_empty_name:"Введіть назву набору", t_no_words:"Додайте хоча б одну пару слів",
+  t_hint_used:"Підказка", t_backup_bad:"Файл копії не розпізнано",
+  demo_name:"Демо · IELTS Education", created:"створено"
+},
+ru:{
+  tagline:"словарь, который расцветает",
+  backup:"Резервная копия", restore:"Восстановить",
+  lib_title:"Мои коллекции", lib_sub:"Наборы слов и фраз для изучения. Откройте набор, чтобы редактировать, или начните тренировку.",
+  back:"К коллекциям", bulk_add:"Вставить списком", print:"Печать", train:"Тренировать",
+  worksheet:"Рабочий лист", m_ws_title:"Рабочий лист",
+  m_ws_sub:"Распечатайте лист или сохраните в Word: ученик вписывает ответы от руки, а потом сверяет с ключом.",
+  ws_sentences:"Строки для своих предложений", ws_key:"Ключ ответов на отдельной странице",
+  ws_word:"Скачать Word", ws_name:"Имя", ws_date:"Дата",
+  ws_write_tr:"Впишите перевод", ws_write_en:"Впишите English", key_title:"Ключ ответов",
+  ws_sent_lab:"Своё предложение", t_ws:"Лист готов",
+  limit_txt:"В наборе больше 20 слов — короткие наборы учатся легче. Можно разделить его на части по 20.",
+  split:"Разделить по 20", add_word:"Добавить слово",
+  cancel:"Отмена", create:"Создать", add:"Добавить", close:"Закрыть", delete:"Удалить",
+  m_new_title:"Новая коллекция", m_new_sub:"Назовите набор — например, темой или уроком: «Education», «IELTS Essay Linkers».", m_new_ph:"Название набора",
+  m_bulk_title:"Вставить списком", m_bulk_sub:"По одной паре на строку: английское слово, затем тире или дефис, затем перевод. Можно скопировать из конспекта или Google Docs.",
+  m_bulk_note:"Строки без тире будут пропущены. Слова добавятся к текущему набору.",
+  m_imp_title:"Импорт набора", m_imp_sub:"Вставьте код набора, которым поделился преподаватель, или выберите файл набора (.json). Подойдёт и простой список «слово — перевод».",
+  m_imp_ph:"Вставьте код или список слов сюда…", do_import:"Импортировать",
+  m_exp_title:"Поделиться набором", m_exp_sub:"Скачайте файл или скопируйте код — ученик вставит его в «Импорт» у себя, и набор появится в его библиотеке.",
+  copy_code:"Скопировать код", dl_file:"Скачать файл",
+  m_res_title:"Восстановить копию", m_res_sub:"Выберите файл резервной копии (.json). Внимание: текущие данные в этом браузере будут заменены.",
+  foot:"WordBloom работает офлайн: все слова хранятся только в этом браузере. Делайте резервную копию время от времени.",
+  tr_short:"Перевод", tr_short2:"Перевод", shuffle:"Перемешать", only_marked:"Только сложные",
+  restart:"Заново", check:"Проверить", retry_wrong:"Повторить ошибки",
+  rv_title:"На доработку", rv_sub:"Сюда попадают слова с ошибками и подсказками. Слово «расцветает» и уходит отсюда после двух верных ответов подряд без подсказок.",
+  new_set:"Новая коллекция", import_set:"Импорт", open:"Открыть",
+  empty_h:"Пока пусто", empty_p:"Создайте первую коллекцию — добавьте слова вручную или вставьте готовый список.",
+  words:["слово","слова","слов"], learned:"выучено", of:"из",
+  review_cta:"Повторить", review_line:"ждут повторения",
+  del_set_h:"Удалить набор?", del_set_p:"и все слова в нём будут удалены безвозвратно.",
+  del_word_h:"Удалить слово?", del_word_p:"Пара будет убрана из набора.",
+  col_en:"English", col_tr:"Перевод", my_ex:"Моё предложение", teacher_ex:"Пример от преподавателя",
+  hint_aria:"Подсказка: первая буква", speak_aria:"Озвучить", del_aria:"Удалить",
+  v_ok:"Верно!", v_bad:"Правильный ответ:", v_hint:"С подсказкой", v_skip:"Пропущено",
+  you_wrote:"вы написали:", score_of:"из", review_all:"Тренировать все",
+  rv_empty_h:"Всё расцвело!", rv_empty_p:"Нет сложных слов. Так держать!",
+  back_to_set:"К набору", back_to_list:"К списку",
+  t_saved:"Сохранено", t_imported:"Набор импортирован", t_words_added:"слов добавлено",
+  t_badcode:"Не удалось распознать код или список", t_copied:"Код скопирован",
+  t_backup:"Копия скачана", t_restored:"Данные восстановлены", t_deleted:"Удалено",
+  t_split:"Набор разделён на части", t_nothing:"Повторять нечего — ошибок нет",
+  t_empty_name:"Введите название набора", t_no_words:"Добавьте хотя бы одну пару слов",
+  t_hint_used:"Подсказка", t_backup_bad:"Файл копии не распознан",
+  demo_name:"Демо · IELTS Education", created:"создано"
+}};
+
+/* ---------- state ---------- */
+const STORE_KEY = "wordbloom.v1";
+let DB = null;
+let curSetId = null;         // set being edited
+let view = "library";
+let confirmCb = null;
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return null;
+    const d = JSON.parse(raw);
+    if(!d || !Array.isArray(d.sets)) return null;
+    return d;
+  }catch(e){ return null; }
+}
+function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(DB)); }
+function uid(){ return "id" + (DB.seq++) + "_" + Math.random().toString(36).slice(2,7); }
+
+function t(k){ return (I18N[DB.lang] && I18N[DB.lang][k]) || I18N.ru[k] || k; }
+function plur(n, forms){ // [one, few, many]
+  const m = Math.abs(n) % 100, d = m % 10;
+  if(m > 10 && m < 20) return forms[2];
+  if(d > 1 && d < 5) return forms[1];
+  if(d === 1) return forms[0];
+  return forms[2];
+}
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* ---------- toast ---------- */
+let toastTm = null;
+function toast(msg, isErr){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = "toast on" + (isErr ? " err" : "");
+  clearTimeout(toastTm);
+  toastTm = setTimeout(()=>{ el.className = "toast"; }, 2600);
+}
+
+/* ---------- modals ---------- */
+function openModal(id){
+  document.getElementById(id).classList.add("on");
+  const inp = document.querySelector("#" + id + " input[type=text], #" + id + " textarea");
+  if(inp) setTimeout(()=>inp.focus(), 60);
+}
+function closeModal(el){
+  const m = el.closest ? el.closest(".mback") : null;
+  if(m) m.classList.remove("on");
+}
+function closeAllModals(){ document.querySelectorAll(".mback").forEach(m=>m.classList.remove("on")); }
+function askConfirm(title, txt, cb){
+  document.getElementById("confirm-title").textContent = title;
+  document.getElementById("confirm-txt").textContent = txt;
+  confirmCb = cb;
+  openModal("m-confirm");
+}
+
+/* ---------- icons ---------- */
+const IC = {
+  speaker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
+  bulb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.4 1 2.3h6c0-.9.4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>',
+  note:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  imp:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+  flower:'<svg viewBox="0 0 48 48" fill="none"><path d="M24 44V26" stroke="#4E9A51" stroke-width="2.6" stroke-linecap="round"/><circle cx="24" cy="18" r="6" fill="#FFD3E0" stroke="#D96B97" stroke-width="1.8"/><circle cx="24" cy="18" r="2.2" fill="#D96B97"/><path d="M24 32c-5 0-8.6-2.9-9-7.7 5 0 8.6 2.9 9 7.7z" fill="#C9E7B5" stroke="#4E9A51" stroke-width="1.5"/><path d="M24 28.5c5 0 8.6-2.9 9-7.7-5 0-8.6 2.9-9 7.7z" fill="#BBE9F2" stroke="#4E9A51" stroke-width="1.5"/></svg>'
+};
+
+/* ---------- TTS ---------- */
+let voices = [];
+function loadVoices(){ voices = window.speechSynthesis ? speechSynthesis.getVoices() : []; }
+if(window.speechSynthesis){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function speak(text){
+  if(!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-GB";
+  const v = voices.find(v=>/en[-_]GB/i.test(v.lang)) || voices.find(v=>/^en/i.test(v.lang));
+  if(v) u.voice = v;
+  u.rate = 0.95;
+  speechSynthesis.speak(u);
+}
+
+/* ---------- data helpers ---------- */
+function getSet(sid){ return DB.sets.find(s=>s.id===sid); }
+function getWord(sid, wid){ const s = getSet(sid); return s ? s.words.find(w=>w.id===wid) : null; }
+function learnedCount(set){ return set.words.filter(w=>w.streak>=2 && !w.need).length; }
+function needCount(set){ return set.words.filter(w=>w.need).length; }
+function allNeedItems(){
+  const out = [];
+  DB.sets.forEach(s=>s.words.forEach(w=>{ if(w.need) out.push({sid:s.id, wid:w.id}); }));
+  return out;
+}
+function shuffleArr(a){
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); const tmp=a[i]; a[i]=a[j]; a[j]=tmp; }
+  return a;
+}
+</script>
+<script>
+"use strict";
+/* ================= views ================= */
+function showView(name){
+  view = name;
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+  document.getElementById("view-" + name).classList.add("on");
+  window.scrollTo({top:0});
+  if(name==="library") renderLibrary();
+  if(name==="review") renderReview();
+}
+
+/* ================= library ================= */
+function renderLibrary(){
+  const grid = document.getElementById("sets-grid");
+  grid.innerHTML = "";
+
+  /* review banner */
+  const need = allNeedItems();
+  const slot = document.getElementById("review-slot");
+  if(need.length){
+    slot.innerHTML =
+      '<div class="review-banner">' +
+        '<div class="ic">' + IC.flower + '</div>' +
+        '<div class="grow"><b>' + esc(t("rv_title")) + ': ' + need.length + '</b>' +
+        '<p>' + need.length + ' ' + plur(need.length, t("words")) + ' ' + esc(t("review_line")) + '</p></div>' +
+        '<button type="button" class="btn btn-ghost btn-sm" id="btn-go-review">' + esc(t("open")) + '</button>' +
+        '<button type="button" class="btn btn-primary btn-sm" id="btn-train-review">' + esc(t("review_cta")) + '</button>' +
+      '</div>';
+    document.getElementById("btn-go-review").onclick = ()=>showView("review");
+    document.getElementById("btn-train-review").onclick = ()=>openTrainer(null);
+  } else { slot.innerHTML = ""; }
+
+  DB.sets.forEach(s=>{
+    const learned = learnedCount(s);
+    const total = s.words.length;
+    const pct = total ? Math.round(learned/total*100) : 0;
+    const card = document.createElement("div");
+    card.className = "set-card ci" + (s.ci % 6);
+    card.innerHTML =
+      '<div class="swatch"></div>' +
+      '<div class="corner-tools">' +
+        '<button type="button" class="btn-icon" data-act="share" title="' + esc(t("m_exp_title")) + '">' + IC.share + '</button>' +
+        '<button type="button" class="btn-icon danger" data-act="del" title="' + esc(t("delete")) + '">' + IC.trash + '</button>' +
+      '</div>' +
+      '<div class="set-name">' + esc(s.name) + '</div>' +
+      '<div class="set-meta"><span>' + total + ' ' + plur(total, t("words")) + '</span><span>·</span><span>' + esc(t("created")) + ' ' + new Date(s.created).toLocaleDateString(DB.lang === "ua" ? "uk-UA" : "ru-RU") + '</span></div>' +
+      '<div class="prog"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="prog-txt">' + esc(t("learned")) + ' ' + learned + ' ' + esc(t("of")) + ' ' + total + '</div>' +
+      '<div class="set-actions">' +
+        '<button type="button" class="btn btn-ghost btn-sm" data-act="open">' + esc(t("open")) + '</button>' +
+        '<button type="button" class="btn btn-peach btn-sm" data-act="train">' + IC.play + ' ' + esc(t("train")) + '</button>' +
+      '</div>';
+    card.querySelector('[data-act="open"]').onclick = ()=>openEditor(s.id);
+    card.querySelector('[data-act="train"]').onclick = ()=>{
+      if(!s.words.length){ toast(t("t_no_words"), true); return; }
+      openTrainer(s.id);
+    };
+    card.querySelector('[data-act="share"]').onclick = ()=>openExport(s.id);
+    card.querySelector('[data-act="del"]').onclick = ()=>{
+      askConfirm(t("del_set_h"), "«" + s.name + "» " + t("del_set_p"), ()=>{
+        DB.sets = DB.sets.filter(x=>x.id!==s.id);
+        save(); renderLibrary(); toast(t("t_deleted"));
+      });
+    };
+    grid.appendChild(card);
+  });
+
+  /* new set card */
+  const nc = document.createElement("button");
+  nc.type = "button";
+  nc.className = "new-card";
+  nc.innerHTML = IC.plus + "<span>" + esc(t("new_set")) + "</span>";
+  nc.onclick = ()=>{ document.getElementById("newset-name").value = ""; openModal("m-newset"); };
+  grid.appendChild(nc);
+
+  /* import card */
+  const ic = document.createElement("button");
+  ic.type = "button";
+  ic.className = "new-card";
+  ic.style.borderColor = "var(--blue)";
+  ic.style.color = "#3E7C8C";
+  ic.innerHTML = IC.imp + "<span>" + esc(t("import_set")) + "</span>";
+  ic.onclick = ()=>{ document.getElementById("import-text").value = ""; document.getElementById("import-file").value = ""; openModal("m-import"); };
+  grid.appendChild(ic);
+}
+
+function createSet(name){
+  const s = { id: uid(), name: name.trim(), ci: DB.sets.length % 6, created: Date.now(), words: [] };
+  DB.sets.push(s);
+  save();
+  return s;
+}
+
+/* ================= export / import / backup ================= */
+let exportSetId = null;
+
+function setToPayload(s){
+  return { type:"wordbloom-set", v:1, name:s.name,
+    words: s.words.map(w=>({en:w.en, tr:w.tr, ex:w.ex||"", tex:w.tex||""})) };
+}
+function openExport(sid){
+  exportSetId = sid;
+  const s = getSet(sid);
+  const code = "WB1." + b64encode(JSON.stringify(setToPayload(s)));
+  document.getElementById("export-code").textContent = code;
+  openModal("m-export");
+}
+function b64encode(str){
+  return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function b64decode(b64){
+  let s = b64.replace(/-/g,"+").replace(/_/g,"/");
+  while(s.length % 4) s += "=";
+  return decodeURIComponent(escape(atob(s)));
+}
+function downloadFile(name, text, mime){
+  const bom = mime === "application/msword" ? "﻿" : "";
+  const blob = new Blob([bom + text], {type: mime || "application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 300);
+}
+
+function parseImportText(text){
+  text = (text||"").trim();
+  if(!text) return null;
+  /* 1) WB1 code */
+  if(text.indexOf("WB1.") === 0){
+    try{
+      const obj = JSON.parse(b64decode(text.slice(4)));
+      if(obj && obj.type==="wordbloom-set" && Array.isArray(obj.words)) return obj;
+    }catch(e){ return null; }
+    return null;
+  }
+  /* 2) plain JSON */
+  if(text.charAt(0)==="{"){
+    try{
+      const obj = JSON.parse(text);
+      if(obj && obj.type==="wordbloom-set" && Array.isArray(obj.words)) return obj;
+    }catch(e){}
+  }
+  /* 3) lines "word — translation" */
+  const pairs = parseLines(text);
+  if(pairs.length) return { type:"wordbloom-set", v:1, name:"", words: pairs };
+  return null;
+}
+function parseLines(text){
+  const out = [];
+  text.split(/\r?\n/).forEach(line=>{
+    const m = line.split(/\s+[—–-]\s+|\t|;/);
+    if(m.length >= 2){
+      const en = m[0].trim(), tr = m.slice(1).join(" — ").trim();
+      if(en && tr) out.push({en:en, tr:tr, ex:"", tex:""});
+    }
+  });
+  return out;
+}
+function importPayload(payload){
+  let name = (payload.name || "").trim();
+  if(!name) name = (DB.lang==="ua" ? "Імпортований набір" : "Импортированный набор") + " " + new Date().toLocaleDateString();
+  const s = createSet(name);
+  payload.words.forEach(w=>{
+    if(w.en && w.tr) s.words.push({ id: uid(), en:String(w.en).trim(), tr:String(w.tr).trim(),
+      ex:String(w.ex||""), tex:String(w.tex||""), streak:0, need:false });
+  });
+  save();
+  closeAllModals();
+  renderLibrary();
+  toast(t("t_imported") + ": " + s.words.length + " " + plur(s.words.length, t("words")));
+}
+
+function doBackup(){
+  const payload = { type:"wordbloom-backup", v:1, data:{ sets: DB.sets, seq: DB.seq } };
+  downloadFile("wordbloom-backup-" + new Date().toISOString().slice(0,10) + ".json", JSON.stringify(payload));
+  toast(t("t_backup"));
+}
+function doRestore(file){
+  const rd = new FileReader();
+  rd.onload = ()=>{
+    try{
+      const obj = JSON.parse(rd.result);
+      if(obj && obj.type==="wordbloom-backup" && obj.data && Array.isArray(obj.data.sets)){
+        DB.sets = obj.data.sets;
+        DB.seq = obj.data.seq || 1000;
+        save(); closeAllModals(); showView("library");
+        toast(t("t_restored"));
+      } else toast(t("t_backup_bad"), true);
+    }catch(e){ toast(t("t_backup_bad"), true); }
+  };
+  rd.readAsText(file);
+}
+
+/* ================= demo seed ================= */
+function seedDemo(){
+  const demo = [
+    ["curriculum","навчальний план","The school is redesigning its curriculum to include more project-based learning."],
+    ["tuition fees","плата за навчання","Tuition fees at British universities have risen sharply in recent years."],
+    ["compulsory","обов’язковий","In the UK, education is compulsory between the ages of five and eighteen."],
+    ["literacy","грамотність","Literacy rates have improved dramatically over the past century."],
+    ["distance learning","дистанційне навчання","Distance learning allows students to study from anywhere in the world."],
+    ["rote learning","завчання напам’ять","Rote learning is far less effective than really understanding a topic."],
+    ["critical thinking","критичне мислення","Good schools encourage critical thinking rather than memorisation."],
+    ["aptitude","здібності","She showed a real aptitude for languages from an early age."],
+    ["graduate","випускник","Graduates with work experience usually find jobs more easily."],
+    ["higher education","вища освіта","Access to higher education has widened considerably."]
+  ];
+  const s = createSet(t("demo_name"));
+  demo.forEach(d=>s.words.push({ id: uid(), en:d[0], tr:d[1], ex:"", tex:d[2], streak:0, need:false }));
+  save();
+}
+</script>
+<script>
+"use strict";
+/* ================= editor ================= */
+function openEditor(sid){
+  curSetId = sid;
+  renderEditor();
+  showView("editor");
+}
+function renderEditor(){
+  const s = getSet(curSetId);
+  if(!s){ showView("library"); return; }
+  document.getElementById("ed-name").value = s.name;
+  const tb = document.getElementById("wtable");
+  tb.innerHTML = "";
+  s.words.forEach((w, i)=> tb.appendChild(wordRowEl(w, i)));
+  updateEditorMeta();
+}
+function wordRowEl(w, i){
+  const row = document.createElement("div");
+  row.className = "wrow";
+  row.dataset.wid = w.id;
+  const hasEx = (w.ex || w.tex);
+  row.innerHTML =
+    '<div class="num">' + (i+1) + '</div>' +
+    '<div class="en-wrap"><input type="text" class="en-in" data-f="en" value="' + esc(w.en) + '" placeholder="English" autocomplete="off" autocapitalize="off" spellcheck="false"></div>' +
+    '<div class="tr-wrap"><input type="text" class="tr-in" data-f="tr" value="' + esc(w.tr) + '" placeholder="' + esc(t("col_tr")) + '" autocomplete="off"></div>' +
+    '<div class="wrow-tools">' +
+      '<button type="button" class="btn-icon" data-act="say" title="' + esc(t("speak_aria")) + '" aria-label="' + esc(t("speak_aria")) + '">' + IC.speaker + '</button>' +
+      '<button type="button" class="ex-toggle" data-act="ex" title="' + esc(t("my_ex")) + '">' + IC.note + '<span>' + (hasEx ? "✓" : "") + '</span></button>' +
+      '<button type="button" class="btn-icon danger" data-act="del" title="' + esc(t("del_aria")) + '" aria-label="' + esc(t("del_aria")) + '">' + IC.trash + '</button>' +
+    '</div>' +
+    '<div class="ex-area' + (hasEx ? " on" : "") + '">' +
+      '<div class="ex-box"><label>' + esc(t("my_ex")) + '</label><textarea data-f="ex" rows="2" placeholder="I use this word when…">' + esc(w.ex||"") + '</textarea></div>' +
+      '<div class="ex-box teacher"><label>' + esc(t("teacher_ex")) + '</label><textarea data-f="tex" rows="2" placeholder="Model sentence…">' + esc(w.tex||"") + '</textarea></div>' +
+    '</div>';
+  return row;
+}
+function updateEditorMeta(){
+  const s = getSet(curSetId);
+  const n = s ? s.words.length : 0;
+  document.getElementById("ed-count").textContent = n + " " + plur(n, t("words")) + " · " + n + "/20";
+  document.getElementById("limit-note").classList.toggle("on", n > 20);
+}
+function addWordRow(focus){
+  const s = getSet(curSetId);
+  const w = { id: uid(), en:"", tr:"", ex:"", tex:"", streak:0, need:false };
+  s.words.push(w);
+  save();
+  const tb = document.getElementById("wtable");
+  tb.appendChild(wordRowEl(w, s.words.length-1));
+  updateEditorMeta();
+  if(focus !== false){
+    const inp = tb.lastElementChild.querySelector(".en-in");
+    if(inp) inp.focus();
+  }
+}
+function doSplit(){
+  const s = getSet(curSetId);
+  if(!s || s.words.length <= 20) return;
+  const extra = s.words.splice(20);
+  let part = 2;
+  while(extra.length){
+    const chunk = extra.splice(0, 20);
+    const ns = createSet(s.name + " · " + part);
+    chunk.forEach(w=>ns.words.push(w));
+    part++;
+  }
+  save();
+  renderEditor();
+  toast(t("t_split"));
+}
+/* editor events (delegation) */
+document.getElementById("wtable").addEventListener("input", e=>{
+  const row = e.target.closest(".wrow");
+  if(!row) return;
+  const s = getSet(curSetId);
+  const w = s.words.find(x=>x.id===row.dataset.wid);
+  if(!w) return;
+  const f = e.target.dataset.f;
+  if(f){ w[f] = e.target.value; save(); }
+});
+document.getElementById("wtable").addEventListener("click", e=>{
+  const btn = e.target.closest("button");
+  if(!btn) return;
+  const row = btn.closest(".wrow");
+  const s = getSet(curSetId);
+  const w = s.words.find(x=>x.id===row.dataset.wid);
+  if(!w) return;
+  const act = btn.dataset.act;
+  if(act==="say"){ speak(w.en); }
+  else if(act==="ex"){ row.querySelector(".ex-area").classList.toggle("on"); }
+  else if(act==="del"){
+    askConfirm(t("del_word_h"), "«" + (w.en||"…") + " — " + (w.tr||"…") + "». " + t("del_word_p"), ()=>{
+      s.words = s.words.filter(x=>x.id!==w.id);
+      save(); renderEditor(); toast(t("t_deleted"));
+    });
+  }
+});
+document.getElementById("ed-name").addEventListener("input", e=>{
+  const s = getSet(curSetId);
+  if(s){ s.name = e.target.value; save(); }
+});
+</script>
+<script>
+"use strict";
+/* ================= trainer ================= */
+let TR = null;
+
+function norm(s){ return String(s||"").trim().toLowerCase().replace(/\s+/g," "); }
+function markDiff(correct, given){
+  const c = String(correct), g = String(given);
+  const cl = c.toLowerCase(), gl = g.toLowerCase();
+  let p = 0;
+  while(p < cl.length && p < gl.length && cl[p] === gl[p]) p++;
+  let s = 0;
+  while(s < cl.length - p && s < gl.length - p && cl[cl.length-1-s] === gl[gl.length-1-s]) s++;
+  const mid = c.slice(p, c.length - s) || "∙";
+  return esc(c.slice(0,p)) + '<mark class="fix">' + esc(mid) + '</mark>' + esc(c.slice(c.length-s));
+}
+
+function openTrainer(sid){
+  TR = {
+    sid: sid,
+    dir: "en2tr",
+    shuffled: true,
+    markedOnly: false,
+    checked: false,
+    items: [],
+    res: {}   // wid -> {status, given, hinted}
+  };
+  document.getElementById("dir-en2tr").classList.add("on");
+  document.getElementById("dir-tr2en").classList.remove("on");
+  const tgS = document.getElementById("tg-shuffle");
+  tgS.classList.add("on"); tgS.setAttribute("aria-pressed","true");
+  const tgM = document.getElementById("tg-marked");
+  tgM.classList.remove("on"); tgM.setAttribute("aria-pressed","false");
+  tgM.style.display = sid ? "" : "none";
+  rebuildItems();
+  if(!TR.items.length){ toast(t("t_nothing")); TR = null; return; }
+  document.getElementById("tr-title").textContent = sid ? getSet(sid).name : t("rv_title");
+  document.getElementById("tr-back-txt").textContent = sid ? t("back_to_set") : t("back_to_list");
+  renderTrainer();
+  showView("trainer");
+}
+function sourceItems(){
+  if(TR.sid){
+    let ws = getSet(TR.sid).words.filter(w=>w.en.trim() && w.tr.trim());
+    if(TR.markedOnly) ws = ws.filter(w=>w.need);
+    return ws.map(w=>({sid:TR.sid, wid:w.id}));
+  }
+  return allNeedItems();
+}
+function rebuildItems(){
+  TR.items = sourceItems();
+  if(TR.shuffled) shuffleArr(TR.items);
+  TR.checked = false;
+  TR.res = {};
+}
+function renderTrainer(){
+  const list = document.getElementById("tr-list");
+  list.innerHTML = "";
+  TR.items.forEach((it, i)=>{
+    const w = getWord(it.sid, it.wid);
+    if(!w) return;
+    const isEnPrompt = TR.dir === "en2tr";
+    const prompt = isEnPrompt ? w.en : w.tr;
+    const row = document.createElement("div");
+    row.className = "tr-row";
+    row.dataset.wid = it.wid;
+    row.dataset.sid = it.sid;
+    let promptHtml = '<div class="tr-prompt">';
+    if(isEnPrompt) promptHtml += '<button type="button" class="btn-icon" data-act="say" style="width:34px;height:34px" title="' + esc(t("speak_aria")) + '">' + IC.speaker + '</button>';
+    promptHtml += '<span>' + esc(prompt) + '</span>';
+    if(!TR.sid){ const st = getSet(it.sid); if(st) promptHtml += '<span class="src">' + esc(st.name) + '</span>'; }
+    promptHtml += '</div>';
+    row.innerHTML =
+      '<div class="num">' + (i+1) + '</div>' +
+      promptHtml +
+      '<div class="ans-wrap" style="display:flex;gap:8px;align-items:center">' +
+        '<input type="text" class="tr-ans" autocomplete="off" autocapitalize="off" spellcheck="off" aria-label="' + esc(t("check")) + ' ' + (i+1) + '">' +
+        '<button type="button" class="btn-icon" data-act="hint" style="width:36px;height:36px" title="' + esc(t("hint_aria")) + '" aria-label="' + esc(t("hint_aria")) + '">' + IC.bulb + '</button>' +
+      '</div>' +
+      '<div class="tr-status"></div>' +
+      '<div class="tr-verdict"></div>';
+    list.appendChild(row);
+  });
+  document.getElementById("btn-check").style.display = "";
+  document.getElementById("btn-retry").style.display = "none";
+  document.getElementById("tr-score").classList.remove("on");
+  const first = list.querySelector(".tr-ans");
+  if(first && window.innerWidth > 760) first.focus();
+}
+function rowAnswer(row){
+  const w = getWord(row.dataset.sid, row.dataset.wid);
+  return TR.dir === "en2tr" ? w.tr : w.en;
+}
+function doCheck(){
+  if(!TR || TR.checked) return;
+  TR.checked = true;
+  let okN = 0, badN = 0, hintN = 0, skipN = 0;
+  document.querySelectorAll("#tr-list .tr-row").forEach(row=>{
+    const w = getWord(row.dataset.sid, row.dataset.wid);
+    if(!w) return;
+    const inp = row.querySelector(".tr-ans");
+    const given = inp.value;
+    const correct = rowAnswer(row);
+    const r = TR.res[row.dataset.wid] || {hinted:false};
+    let status;
+    if(!norm(given)) status = "skip";
+    else if(norm(given) === norm(correct)) status = r.hinted ? "hint" : "ok";
+    else status = "bad";
+    r.status = status; r.given = given;
+    TR.res[row.dataset.wid] = r;
+
+    /* stats */
+    if(status === "ok"){
+      w.streak = (w.streak||0) + 1;
+      if(w.streak >= 2) w.need = false;
+      okN++;
+    } else if(status === "hint" || status === "bad"){
+      w.need = true; w.streak = 0;
+      if(status === "hint") hintN++; else badN++;
+    } else skipN++;
+
+    /* render verdict */
+    row.classList.remove("hint");
+    row.classList.add(status);
+    inp.disabled = true;
+    const hb = row.querySelector('[data-act="hint"]');
+    if(hb) hb.disabled = true;
+    const st = row.querySelector(".tr-status");
+    st.textContent = status==="ok" ? "✓" : status==="bad" ? "✗" : status==="hint" ? "💡" : "–";
+    const vd = row.querySelector(".tr-verdict");
+    let html = "";
+    if(status === "ok"){
+      html = '<span class="lab">' + esc(t("v_ok")) + '</span>';
+    } else if(status === "hint"){
+      html = '<span class="lab">' + esc(t("v_hint")) + '</span><span>' + esc(correct) + '</span>';
+    } else if(status === "bad"){
+      html = '<span class="lab">' + esc(t("v_bad")) + '</span><span>' + markDiff(correct, given) + '</span>' +
+             '<span style="color:var(--ink-soft)">· ' + esc(t("you_wrote")) + ' <b>' + esc(given) + '</b></span>';
+    } else {
+      html = '<span class="lab">' + esc(t("v_skip")) + '</span><span>' + esc(correct) + '</span>';
+    }
+    if(TR.dir === "tr2en" && status !== "ok"){
+      html += ' <button type="button" class="btn-icon" data-act="say-v" style="width:32px;height:32px" title="' + esc(t("speak_aria")) + '">' + IC.speaker + '</button>';
+    }
+    vd.innerHTML = html;
+  });
+  save();
+
+  /* score */
+  const total = TR.items.length;
+  const sc = document.getElementById("tr-score");
+  sc.innerHTML =
+    '<span class="big">' + okN + ' ' + esc(t("score_of")) + ' ' + total + '</span>' +
+    '<span class="chip g">✓ ' + okN + '</span>' +
+    (badN ? '<span class="chip r">✗ ' + badN + '</span>' : "") +
+    (hintN ? '<span class="chip v">💡 ' + hintN + '</span>' : "") +
+    (skipN ? '<span class="chip">– ' + skipN + '</span>' : "");
+  sc.classList.add("on");
+  document.getElementById("btn-check").style.display = "none";
+  if(badN + hintN + skipN > 0) document.getElementById("btn-retry").style.display = "";
+}
+function doRetry(){
+  const wrong = TR.items.filter(it=>{
+    const r = TR.res[it.wid];
+    return r && (r.status==="bad" || r.status==="hint" || r.status==="skip");
+  });
+  if(!wrong.length){ toast(t("t_nothing")); return; }
+  TR.items = TR.shuffled ? shuffleArr(wrong) : wrong;
+  TR.checked = false;
+  TR.res = {};
+  renderTrainer();
+}
+/* trainer events (delegation) */
+document.getElementById("tr-list").addEventListener("click", e=>{
+  const btn = e.target.closest("button");
+  if(!btn || !TR) return;
+  const row = btn.closest(".tr-row");
+  const act = btn.dataset.act;
+  if(act === "say"){
+    const w = getWord(row.dataset.sid, row.dataset.wid);
+    speak(TR.dir === "en2tr" ? w.en : w.tr);
+  } else if(act === "say-v"){
+    const w = getWord(row.dataset.sid, row.dataset.wid);
+    speak(w.en);
+  } else if(act === "hint" && !TR.checked){
+    const correct = rowAnswer(row);
+    const inp = row.querySelector(".tr-ans");
+    inp.value = correct.trim().charAt(0);
+    const r = TR.res[row.dataset.wid] || {};
+    r.hinted = true;
+    TR.res[row.dataset.wid] = r;
+    row.classList.add("hint");
+    inp.focus();
+  }
+});
+document.getElementById("tr-list").addEventListener("keydown", e=>{
+  if(e.key !== "Enter" || !e.target.classList.contains("tr-ans")) return;
+  e.preventDefault();
+  const inputs = Array.from(document.querySelectorAll("#tr-list .tr-ans:not(:disabled)"));
+  const idx = inputs.indexOf(e.target);
+  if(idx >= 0 && idx < inputs.length - 1) inputs[idx+1].focus();
+  else doCheck();
+});
+</script>
+<script>
+"use strict";
+/* ================= review ================= */
+function renderReview(){
+  const body = document.getElementById("rv-body");
+  const items = allNeedItems();
+  if(!items.length){
+    body.innerHTML =
+      '<div class="empty">' + IC.flower +
+      '<h2>' + esc(t("rv_empty_h")) + '</h2>' +
+      '<p>' + esc(t("rv_empty_p")) + '</p></div>';
+    return;
+  }
+  let html =
+    '<div style="margin-bottom:18px"><button type="button" class="btn btn-primary" id="btn-train-review2">' +
+    IC.play + ' ' + esc(t("review_all")) + ' (' + items.length + ')</button></div>';
+  DB.sets.forEach(s=>{
+    const ws = s.words.filter(w=>w.need);
+    if(!ws.length) return;
+    html += '<div class="rv-group"><h3><span class="dot" style="background:var(--' +
+      ["pink","peach","blue","lavender","sage","beige"][s.ci % 6] + ')"></span>' +
+      esc(s.name) + ' · ' + ws.length + '</h3>';
+    ws.forEach(w=>{
+      const filled = Math.min(w.streak||0, 2);
+      html += '<div class="rv-item">' +
+        '<button type="button" class="btn-icon" data-say="' + esc(w.en) + '" style="width:34px;height:34px" title="' + esc(t("speak_aria")) + '">' + IC.speaker + '</button>' +
+        '<span class="en">' + esc(w.en) + '</span><span class="tr">— ' + esc(w.tr) + '</span>' +
+        '<span class="streak"><span class="petal' + (filled>=1?" f":"") + '"></span><span class="petal' + (filled>=2?" f":"") + '"></span>' + filled + '/2</span>' +
+      '</div>';
+    });
+    html += '</div>';
+  });
+  body.innerHTML = html;
+  document.getElementById("btn-train-review2").onclick = ()=>openTrainer(null);
+  body.querySelectorAll("[data-say]").forEach(b=> b.onclick = ()=>speak(b.dataset.say));
+}
+
+/* ================= print ================= */
+function doPrint(){
+  const s = getSet(curSetId);
+  if(!s || !s.words.length){ toast(t("t_no_words"), true); return; }
+  const loc = DB.lang === "ua" ? "uk-UA" : "ru-RU";
+  let rows = "";
+  s.words.forEach((w,i)=>{
+    const ex = [w.tex, w.ex].filter(x=>x && x.trim()).join(" · ");
+    rows += '<tr><td>' + (i+1) + '</td><td><b>' + esc(w.en) + '</b>' +
+      (ex ? '<div class="p-ex">' + esc(ex) + '</div>' : "") +
+      '</td><td>' + esc(w.tr) + '</td></tr>';
+  });
+  document.getElementById("print-area").innerHTML =
+    '<h1>' + esc(s.name) + '</h1>' +
+    '<div class="p-sub">WordBloom · ' + s.words.length + ' ' + plur(s.words.length, t("words")) + ' · ' + new Date().toLocaleDateString(loc) + '</div>' +
+    '<table><thead><tr><th style="width:5%">№</th><th style="width:55%">English</th><th>' + esc(t("col_tr")) + '</th></tr></thead><tbody>' +
+    rows + '</tbody></table>';
+  window.print();
+}
+
+/* ================= worksheet ================= */
+const WS_CSS =
+'.ws-sheet{font-family:Georgia,"Times New Roman",serif;color:#000}' +
+'.ws-title{font-size:20pt;font-weight:bold}' +
+'.ws-sub{font-size:10pt;color:#333;margin:2pt 0 10pt}' +
+'.ws-names{font-size:11pt;margin:6pt 0 14pt}' +
+'.ws-names span{display:inline-block;min-width:130pt;border-bottom:.75pt solid #000;padding:0 18pt 2pt 2pt;margin-right:26pt}' +
+'table.ws{width:100%;border-collapse:collapse;font-size:12.5pt}' +
+'table.ws th{text-align:left;border-bottom:1.5pt solid #000;padding:4pt 6pt;font-size:11pt}' +
+'table.ws td{padding:4pt 6pt;vertical-align:bottom}' +
+'td.ws-num{width:5%;color:#333}' +
+'td.ws-w{border-bottom:.75pt solid #555;height:24pt}' +
+'td.ws-sline{border-bottom:.75pt dotted #777;height:22pt}' +
+'.ws-slab{font-size:8.5pt;color:#555}' +
+'.ws-key{page-break-before:always;margin-top:0}' +
+'table.wskey{width:100%;border-collapse:collapse;font-size:11.5pt;margin-top:8pt}' +
+'table.wskey th{text-align:left;border-bottom:1.5pt solid #000;padding:3pt 6pt}' +
+'table.wskey td{border-bottom:.5pt solid #999;padding:3pt 6pt}';
+(function(){ const st = document.createElement("style"); st.textContent = WS_CSS; document.head.appendChild(st); })();
+
+let WS = { dir:"en2tr" };
+function wsOptions(){
+  return {
+    dir: WS.dir,
+    shuffle: document.getElementById("ws-shuffle").checked,
+    sent: document.getElementById("ws-sent").checked,
+    key: document.getElementById("ws-key").checked
+  };
+}
+function buildWorksheet(s, o){
+  const loc = DB.lang === "ua" ? "uk-UA" : "ru-RU";
+  const items = s.words.filter(w=>w.en.trim() && w.tr.trim()).map(w=>({en:w.en.trim(), tr:w.tr.trim()}));
+  if(o.shuffle) shuffleArr(items);
+  const headPrompt = o.dir === "en2tr" ? "English" : t("col_tr");
+  const headWrite = o.dir === "en2tr" ? t("ws_write_tr") : t("ws_write_en");
+  let rows = "";
+  items.forEach((w, i)=>{
+    const prompt = o.dir === "en2tr" ? w.en : w.tr;
+    rows += '<tr><td class="ws-num">' + (i+1) + '</td><td><b>' + esc(prompt) + '</b></td><td class="ws-w"></td></tr>';
+    if(o.sent) rows += '<tr><td></td><td colspan="2" class="ws-sline"><span class="ws-slab">' + esc(t("ws_sent_lab")) + ':</span></td></tr>';
+  });
+  let html = '<div class="ws-sheet">' +
+    '<div class="ws-title">' + esc(s.name) + '</div>' +
+    '<div class="ws-sub">WordBloom · ' + new Date().toLocaleDateString(loc) + ' · ' + items.length + ' ' + plur(items.length, t("words")) + '</div>' +
+    '<div class="ws-names"><span>' + esc(t("ws_name")) + ':</span><span>' + esc(t("ws_date")) + ':</span></div>' +
+    '<table class="ws"><thead><tr><th>№</th><th style="width:45%">' + esc(headPrompt) + '</th><th>' + esc(headWrite) + '</th></tr></thead><tbody>' + rows + '</tbody></table>';
+  if(o.key){
+    let krows = "";
+    items.forEach((w, i)=>{ krows += '<tr><td style="width:6%">' + (i+1) + '</td><td><b>' + esc(w.en) + '</b></td><td>' + esc(w.tr) + '</td></tr>'; });
+    html += '<div class="ws-key"><div class="ws-title" style="font-size:15pt">' + esc(t("key_title")) + ' · ' + esc(s.name) + '</div>' +
+      '<table class="wskey"><thead><tr><th>№</th><th>English</th><th>' + esc(t("col_tr")) + '</th></tr></thead><tbody>' + krows + '</tbody></table></div>';
+  }
+  html += '</div>';
+  return html;
+}
+function wordDoc(html){
+  return '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">' +
+    '<head><meta charset="utf-8"><title>WordBloom</title><style>' + WS_CSS + '</style></head><body>' + html + '</body></html>';
+}
+
+/* ================= i18n ================= */
+function applyI18n(){
+  document.documentElement.lang = DB.lang;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ el.placeholder = t(el.dataset.i18nPh); });
+  document.getElementById("lang-ua").classList.toggle("on", DB.lang==="ua");
+  document.getElementById("lang-ru").classList.toggle("on", DB.lang==="ru");
+  if(view==="library") renderLibrary();
+  else if(view==="editor") renderEditor();
+  else if(view==="review") renderReview();
+}
+function setLang(l){
+  DB.lang = l; save(); applyI18n();
+}
+
+/* ================= global bindings ================= */
+function bindAll(){
+  document.getElementById("lang-ua").onclick = ()=>setLang("ua");
+  document.getElementById("lang-ru").onclick = ()=>setLang("ru");
+  document.getElementById("btn-backup").onclick = doBackup;
+  document.getElementById("btn-restore").onclick = ()=>{ document.getElementById("restore-file").value=""; openModal("m-restore"); };
+  document.getElementById("restore-file").addEventListener("change", e=>{
+    if(e.target.files && e.target.files[0]) doRestore(e.target.files[0]);
+  });
+
+  /* back links */
+  document.querySelectorAll(".back-link[data-go]").forEach(b=> b.onclick = ()=>showView(b.dataset.go));
+  document.getElementById("tr-back").onclick = ()=>{
+    if(TR && TR.sid) openEditor(TR.sid); else showView("review");
+  };
+
+  /* new set */
+  document.getElementById("btn-createset").onclick = ()=>{
+    const name = document.getElementById("newset-name").value.trim();
+    if(!name){ toast(t("t_empty_name"), true); return; }
+    const s = createSet(name);
+    closeAllModals();
+    openEditor(s.id);
+  };
+  document.getElementById("newset-name").addEventListener("keydown", e=>{
+    if(e.key==="Enter") document.getElementById("btn-createset").click();
+  });
+
+  /* editor toolbar */
+  document.getElementById("btn-addrow").onclick = ()=>addWordRow();
+  document.getElementById("btn-bulk").onclick = ()=>{ document.getElementById("bulk-text").value=""; openModal("m-bulk"); };
+  document.getElementById("btn-bulkadd").onclick = ()=>{
+    const pairs = parseLines(document.getElementById("bulk-text").value);
+    if(!pairs.length){ toast(t("t_badcode"), true); return; }
+    const s = getSet(curSetId);
+    pairs.forEach(p=> s.words.push({ id: uid(), en:p.en, tr:p.tr, ex:"", tex:"", streak:0, need:false }));
+    save(); closeAllModals(); renderEditor();
+    toast(pairs.length + " " + plur(pairs.length, t("words")) + " " + t("t_words_added"));
+  };
+  document.getElementById("btn-print").onclick = doPrint;
+  document.getElementById("btn-worksheet").onclick = ()=>{
+    const s = getSet(curSetId);
+    if(!s || !s.words.filter(w=>w.en.trim() && w.tr.trim()).length){ toast(t("t_no_words"), true); return; }
+    openModal("m-worksheet");
+  };
+  document.querySelectorAll("#ws-dir button").forEach(b=> b.onclick = ()=>{
+    WS.dir = b.dataset.d;
+    document.querySelectorAll("#ws-dir button").forEach(x=>x.classList.toggle("on", x===b));
+  });
+  document.getElementById("btn-ws-print").onclick = ()=>{
+    const s = getSet(curSetId);
+    if(!s) return;
+    document.getElementById("print-area").innerHTML = buildWorksheet(s, wsOptions());
+    closeAllModals();
+    window.print();
+  };
+  document.getElementById("btn-ws-word").onclick = ()=>{
+    const s = getSet(curSetId);
+    if(!s) return;
+    const fname = s.name.replace(/[\\/:*?"<>|]/g, "_") + "-worksheet.doc";
+    downloadFile(fname, wordDoc(buildWorksheet(s, wsOptions())), "application/msword");
+    toast(t("t_ws"));
+  };
+  document.getElementById("btn-train").onclick = ()=>{
+    const s = getSet(curSetId);
+    if(!s || !s.words.filter(w=>w.en.trim()&&w.tr.trim()).length){ toast(t("t_no_words"), true); return; }
+    openEditor(curSetId); openTrainer(curSetId);
+  };
+  document.getElementById("btn-split").onclick = doSplit;
+
+  /* import */
+  document.getElementById("btn-doimport").onclick = ()=>{
+    const f = document.getElementById("import-file").files[0];
+    if(f){
+      const rd = new FileReader();
+      rd.onload = ()=>{
+        const p = parseImportText(rd.result);
+        if(p) importPayload(p); else toast(t("t_badcode"), true);
+      };
+      rd.readAsText(f);
+      return;
+    }
+    const p = parseImportText(document.getElementById("import-text").value);
+    if(p) importPayload(p); else toast(t("t_badcode"), true);
+  };
+
+  /* export */
+  document.getElementById("btn-copycode").onclick = ()=>{
+    const code = document.getElementById("export-code").textContent;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(code).then(()=>toast(t("t_copied")), ()=>fallbackCopy(code));
+    } else fallbackCopy(code);
+  };
+  document.getElementById("btn-dlfile").onclick = ()=>{
+    const s = getSet(exportSetId);
+    if(!s) return;
+    const fname = s.name.replace(/[\\/:*?"<>|]/g,"_") + ".wordbloom.json";
+    downloadFile(fname, JSON.stringify(setToPayload(s), null, 2));
+  };
+
+  /* confirm */
+  document.getElementById("btn-confirm-yes").onclick = ()=>{
+    closeAllModals();
+    if(confirmCb){ const cb = confirmCb; confirmCb = null; cb(); }
+  };
+
+  /* trainer bar */
+  document.getElementById("dir-en2tr").onclick = ()=>{ if(TR && !TR.checked){ TR.dir="en2tr"; syncDir(); renderTrainer(); } };
+  document.getElementById("dir-tr2en").onclick = ()=>{ if(TR && !TR.checked){ TR.dir="tr2en"; syncDir(); renderTrainer(); } };
+  document.getElementById("tg-shuffle").onclick = e=>{
+    if(!TR || TR.checked) return;
+    TR.shuffled = !TR.shuffled;
+    e.currentTarget.classList.toggle("on", TR.shuffled);
+    e.currentTarget.setAttribute("aria-pressed", TR.shuffled);
+    rebuildItems(); renderTrainer();
+  };
+  document.getElementById("tg-marked").onclick = e=>{
+    if(!TR || TR.checked) return;
+    TR.markedOnly = !TR.markedOnly;
+    e.currentTarget.classList.toggle("on", TR.markedOnly);
+    e.currentTarget.setAttribute("aria-pressed", TR.markedOnly);
+    rebuildItems();
+    if(!TR.items.length){ toast(t("t_nothing")); TR.markedOnly = false; e.currentTarget.classList.remove("on"); rebuildItems(); }
+    renderTrainer();
+  };
+  document.getElementById("btn-restart").onclick = ()=>{ if(TR){ rebuildItems(); renderTrainer(); } };
+  document.getElementById("btn-check").onclick = doCheck;
+  document.getElementById("btn-retry").onclick = doRetry;
+
+  /* modals: close buttons / backdrop / Esc */
+  document.querySelectorAll("[data-close]").forEach(b=> b.onclick = ()=>closeModal(b));
+  document.querySelectorAll(".mback").forEach(m=> m.addEventListener("click", e=>{ if(e.target === m) m.classList.remove("on"); }));
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeAllModals(); });
+}
+function fallbackCopy(text){
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  try{ document.execCommand("copy"); toast(t("t_copied")); }
+  catch(e){ toast(t("t_badcode"), true); }
+  ta.remove();
+}
+function syncDir(){
+  document.getElementById("dir-en2tr").classList.toggle("on", TR.dir==="en2tr");
+  document.getElementById("dir-tr2en").classList.toggle("on", TR.dir==="tr2en");
+}
+
+/* ================= init ================= */
+(function init(){
+  DB = load();
+  if(!DB){
+    DB = { v:1, lang:"ua", seq:1, sets:[] };
+    seedDemo();
+  }
+  if(!DB.lang) DB.lang = "ua";
+  bindAll();
+  applyI18n();
+  showView("library");
+})();
+</script>
+</body>
+</html>
